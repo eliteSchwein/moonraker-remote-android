@@ -12,14 +12,21 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="de.eliteschw31n.moonrakerremote.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_webcam"
+        android:name="de.eliteschw31n.moonrakerremote.ui.webcam.WebcamFragment"
+        android:label="@string/menu_webcam"
+        tools:layout="@layout/fragment_webcam" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="de.eliteschw31n.moonrakerremote.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_settings"
+        android:name="de.eliteschw31n.moonrakerremote.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_printer_menu"
+        android:name="de.eliteschw31n.moonrakerremote.ui.printer_menu.PrinterMenuFragment"
+        android:label="@string/menu_printer_menu"
+        tools:layout="@layout/fragment_settings" />
+
 </navigation>
