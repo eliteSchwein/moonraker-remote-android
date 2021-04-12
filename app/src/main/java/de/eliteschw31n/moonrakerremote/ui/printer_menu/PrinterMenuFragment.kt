@@ -21,8 +21,8 @@ class PrinterMenuFragment : Fragment() {
     ): View? {
         printerMenuViewModel =
                 ViewModelProvider(this).get(PrinterMenuViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_settings, container, false)
-        val textView: TextView = root.findViewById(R.id.text_slideshow)
+        val root = inflater.inflate(R.layout.fragment_printer_menu, container, false)
+        val textView: TextView = root.findViewById(R.id.text_printer_menu)
         printerMenuViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
