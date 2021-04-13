@@ -12,6 +12,9 @@
     <string name="menu_printer_menu">Printers</string>
 
     <string name="settings_connection_title">Connection Settings</string>
+    <string name="settings_connection_name">Name</string>
     <string name="settings_connection_ip">Websocket URL</string>
     <string name="settings_connection_stream_url">Stream URL</string>
+
+    <string name="printer_menu_title">Select Printer</string>
 </resources>

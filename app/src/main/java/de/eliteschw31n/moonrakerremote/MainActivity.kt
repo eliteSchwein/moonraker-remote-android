@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import de.eliteschw31n.moonrakerremote.ui.NavTitles
 
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 
@@ -44,6 +45,15 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
+
+        val printers = LocalDatabase.getData().getJSONObject("printers")
+        val currentPrinter = LocalDatabase.getData().getString("currentPrinter")
+        val currentPrinterJson = printers.getJSONObject(currentPrinter)
+
+        val navTitles = NavTitles()
+        navTitles.updateTitle(currentPrinter, navView)
+        navTitles.updateSubTitle(currentPrinterJson.getString("websocketurl"), navView)
+
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

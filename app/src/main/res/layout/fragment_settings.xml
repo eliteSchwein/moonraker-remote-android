@@ -7,7 +7,7 @@
     tools:context=".ui.settings.SettingsFragment">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -25,6 +25,26 @@
         app:layout_constraintVertical_bias="0.011" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_settings_connection_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/settings_connection_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_title"
+        app:startIconContentDescription="@string/settings_connection_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_settings_connection_websocket"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -35,7 +55,7 @@
         android:hint="@string/settings_connection_ip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_name"
         app:startIconContentDescription="@string/settings_connection_ip">
 
         <com.google.android.material.textfield.TextInputEditText

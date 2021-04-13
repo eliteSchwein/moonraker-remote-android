@@ -5,6 +5,7 @@ import org.json.JSONObject
 import java.io.File
 
 class LocalDatabase {
+
     private var localData: JSONObject = JSONObject("{\"notLoaded\":true}")
 
     companion object{
@@ -21,9 +22,10 @@ class LocalDatabase {
     }
 
     fun readData(context: Context) {
+        create(context, "storage.json","{\"currentPrinter\":\"default\",\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsail.local/websocket\", \"webcamurl\": \"http://mainsail.local/webcam/?action=stream\"}} }")
         if(!isFilePresent(context, "storage.json")) {
             print("Generate File")
-            create(context, "storage.json","{\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsail.local/websocket\", \"webcamurl\": \"http://mainsail.local/webcam/?action=stream\"}} }")
+            create(context, "storage.json","{\"currentPrinter\":\"default\",\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsail.local/websocket\", \"webcamurl\": \"http://mainsail.local/webcam/?action=stream\"}} }")
         }
         context.openFileInput("storage.json").use { stream ->
             val data = stream.bufferedReader().use {
