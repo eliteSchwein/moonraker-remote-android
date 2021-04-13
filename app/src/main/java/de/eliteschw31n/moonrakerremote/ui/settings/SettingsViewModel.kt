@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class SettingsViewModel : ViewModel() {
 
     private val _printerWebsocket = MutableLiveData<String>().apply {
-        value = "http://mainsail.local/websocket"
+        value = "ws://mainsail.local/websocket"
     }
 
     private val _printerStreamURL = MutableLiveData<String>().apply {
