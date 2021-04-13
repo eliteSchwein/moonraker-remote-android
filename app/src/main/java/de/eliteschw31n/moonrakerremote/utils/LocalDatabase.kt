@@ -5,11 +5,25 @@ import org.json.JSONObject
 import java.io.File
 
 class LocalDatabase {
-    private var localData: JSONObject = JSONObject()
+    private var localData: JSONObject = JSONObject("{\"notLoaded\":true}")
+
+    companion object{
+        val localDatabase = LocalDatabase()
+        fun readData(context: Context){
+            localDatabase.readData(context)
+        }
+        fun getData() :JSONObject {
+            return localDatabase.getData()
+        }
+        fun writeData(context: Context, data: JSONObject) {
+            localDatabase.writeData(context, data)
+        }
+    }
 
     fun readData(context: Context) {
         if(!isFilePresent(context, "storage.json")) {
-            create(context, "storage.json","{\"printers\": {}")
+            print("Generate File")
+            create(context, "storage.json","{\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsail.local/websocket\", \"webcamurl\": \"http://mainsail.local/webcam/?action=stream\"}} }")
         }
         context.openFileInput("storage.json").use { stream ->
             val data = stream.bufferedReader().use {
