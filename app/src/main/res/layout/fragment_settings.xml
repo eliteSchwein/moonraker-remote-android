@@ -24,83 +24,52 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.011" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_settings_connection_websocket"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="25dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/settings_connection_ip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:startIconContentDescription="@string/settings_connection_ip">
 
-        <TextView
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/input_settings_connection_websocket"
-            android:text="@string/settings_connection_ip" />
+            android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/input_settings_connection_websocket"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="@string/settings_connection_ip" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_settings_connection_stream_url"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="25dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/settings_connection_stream_url"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_websocket"
+        app:startIconContentDescription="@string/settings_connection_stream_url">
 
-        <TextView
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/input_settings_connection_stream_url"
-            android:text="@string/settings_connection_stream_url" />
+            android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/input_settings_connection_stream_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="@string/settings_connection_stream_url" />
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="252dp"
-        tools:layout_editor_absoluteY="438dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_stream_url" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

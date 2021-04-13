@@ -22,14 +22,14 @@ class SettingsFragment : Fragment() {
         settingsMenuViewModel =
                 ViewModelProvider(this).get(SettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
-        val printerWebsocket: TextView = root.findViewById(R.id.input_settings_connection_websocket)
-        settingsMenuViewModel.printerWebsocket.observe(viewLifecycleOwner, Observer {
-            printerWebsocket.text = it
-        })
-        val printerStreamURL: TextView = root.findViewById(R.id.input_settings_connection_stream_url)
-        settingsMenuViewModel.printerStreamURL.observe(viewLifecycleOwner, Observer {
-            printerStreamURL.text = it
-        })
+        //val printerWebsocket: TextView = root.findViewById(R.id.input_settings_connection_websocket)
+        //settingsMenuViewModel.printerWebsocket.observe(viewLifecycleOwner, Observer {
+         //   printerWebsocket.text = it
+        //})
+        //val printerStreamURL: TextView = root.findViewById(R.id.input_settings_connection_stream_url)
+        //settingsMenuViewModel.printerStreamURL.observe(viewLifecycleOwner, Observer {
+        //    printerStreamURL.text = it
+        //})
         return root
     }
 }
