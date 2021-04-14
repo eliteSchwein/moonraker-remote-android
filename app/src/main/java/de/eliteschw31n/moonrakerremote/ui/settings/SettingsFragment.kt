@@ -89,7 +89,6 @@ class SettingsFragment : Fragment() {
         toggleInputEdit(textlayout)
         webSocketClient = object : WebSocketClient(URI(url)) {
             override fun onOpen(handshakedata: ServerHandshake?) {
-                Log.d("TestWebsocket", "onOpen")
                 toggleInputEdit(textlayout)
                 savePrinterData("websocketurl", url)
                 validated = true
@@ -97,7 +96,6 @@ class SettingsFragment : Fragment() {
             }
 
             override fun onMessage(message: String?) {
-                Log.d("TestWebsocket", "onMessage: $message")
                 toggleInputEdit(textlayout)
                 savePrinterData("websocketurl", url)
                 validated = true
@@ -105,7 +103,6 @@ class SettingsFragment : Fragment() {
             }
 
             override fun onClose(code: Int, reason: String?, remote: Boolean) {
-                Log.d("TestWebsocket", "onClose")
                 if(!validated){
                     toggleInputEdit(textlayout)
                     setError(textlayout, "Invalid URL!")
@@ -113,7 +110,6 @@ class SettingsFragment : Fragment() {
             }
 
             override fun onError(ex: Exception?) {
-                Log.e("TestWebsocket", "onError: ${ex?.message}")
                 toggleInputEdit(textlayout)
                 setError(textlayout, "Invalid URL!")
                 validated = true
