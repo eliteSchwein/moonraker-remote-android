@@ -56,7 +56,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_name"
-        app:startIconContentDescription="@string/settings_connection_ip">
+        app:startIconContentDescription="@string/settings_connection_ip"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_settings_test_url"
+        app:endIconContentDescription="@string/settings_connection_test_url">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -76,7 +79,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_websocket"
-        app:startIconContentDescription="@string/settings_connection_stream_url">
+        app:startIconContentDescription="@string/settings_connection_stream_url"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_settings_test_url"
+        app:endIconContentDescription="@string/settings_connection_test_url">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
