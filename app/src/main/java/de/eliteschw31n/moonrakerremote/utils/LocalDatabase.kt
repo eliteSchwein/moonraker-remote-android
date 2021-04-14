@@ -24,7 +24,7 @@ class LocalDatabase {
     fun readData(context: Context) {
         if(!isFilePresent(context, "storage.json")) {
             print("Generate File")
-            create(context, "storage.json","{\"currentPrinter\":\"default\",\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsail.local/websocket\", \"webcamurl\": \"http://mainsail.local/webcam/?action=stream\"}} }")
+            create(context, "storage.json","{\"currentPrinter\":\"default\",\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsailos.local/websocket\", \"webcamurl\": \"http://mainsailos.local/webcam/?action=stream\"}} }")
         }
         context.openFileInput("storage.json").use { stream ->
             val data = stream.bufferedReader().use {
