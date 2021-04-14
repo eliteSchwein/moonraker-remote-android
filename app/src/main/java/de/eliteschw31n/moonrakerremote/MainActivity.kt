@@ -3,6 +3,7 @@ package de.eliteschw31n.moonrakerremote
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,9 +13,9 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import de.eliteschw31n.moonrakerremote.ui.NavTitles
 
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
+import de.eliteschw31n.moonrakerremote.utils.NavTitles
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +29,10 @@ class MainActivity : AppCompatActivity() {
         fun applicationContext() : Context {
             return instance!!.applicationContext
         }
+
+        fun runUiUpdate(task: Runnable) {
+            instance!!.runOnUiThread(task)
+        }
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -36,9 +41,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val context: Context = applicationContext()
-
-        LocalDatabase.readData(context)
+        LocalDatabase.readData()
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -50,9 +53,10 @@ class MainActivity : AppCompatActivity() {
         val currentPrinter = LocalDatabase.getData().getString("currentPrinter")
         val currentPrinterJson = printers.getJSONObject(currentPrinter)
 
-        val navTitles = NavTitles()
-        navTitles.updateTitle(currentPrinter, navView)
-        navTitles.updateSubTitle(currentPrinterJson.getString("websocketurl"), navView)
+        NavTitles.setNavView(navView)
+
+        NavTitles.updateTitle(currentPrinter)
+        NavTitles.updateSubTitle(currentPrinterJson.getString("websocketurl"))
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each

@@ -14,7 +14,7 @@
     <string name="settings_connection_title">Connection Settings</string>
     <string name="settings_connection_name">Name</string>
     <string name="settings_connection_ip">Websocket URL</string>
-    <string name="settings_connection_test_url">Test URL</string>
+    <string name="settings_connection_save_url">Save URL</string>
     <string name="settings_connection_stream_url">Cam Stream URL</string>
 
     <string name="printer_menu_title">Select Printer</string>

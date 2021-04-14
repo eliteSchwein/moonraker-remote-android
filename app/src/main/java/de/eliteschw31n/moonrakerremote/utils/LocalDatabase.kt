@@ -1,30 +1,45 @@
 package de.eliteschw31n.moonrakerremote.utils
 
 import android.content.Context
+import de.eliteschw31n.moonrakerremote.MainActivity
 import org.json.JSONObject
 import java.io.File
 
 class LocalDatabase {
+    private val context = MainActivity.applicationContext()
 
     private var localData: JSONObject = JSONObject("{\"notLoaded\":true}")
 
     companion object{
         val localDatabase = LocalDatabase()
-        fun readData(context: Context){
-            localDatabase.readData(context)
+        fun readData(){
+            localDatabase.readData()
         }
         fun getData() :JSONObject {
             return localDatabase.getData()
         }
-        fun writeData(context: Context, data: JSONObject) {
-            localDatabase.writeData(context, data)
+        fun getPrinterData(printer: String) :JSONObject {
+            return localDatabase.getData()
+                .getJSONObject("printers")
+                .getJSONObject(printer)
+        }
+        fun updatePrinterData(printer: String, printerData: JSONObject) {
+            val data  = localDatabase.getData()
+            val printersData = data
+                .getJSONObject("printers")
+                .put(printer, printerData)
+            data.put("printers", printersData)
+            localDatabase.writeData(data)
+        }
+        fun writeData(data: JSONObject) {
+            localDatabase.writeData(data)
         }
     }
 
-    fun readData(context: Context) {
-        if(!isFilePresent(context, "storage.json")) {
+    fun readData() {
+        if(!isFilePresent("storage.json")) {
             print("Generate File")
-            create(context, "storage.json","{\"currentPrinter\":\"default\",\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsailos.local/websocket\", \"webcamurl\": \"http://mainsailos.local/webcam/?action=stream\"}} }")
+            create("storage.json","{\"currentPrinter\":\"default\",\"printers\": { \"default\": { \"websocketurl\": \"ws://mainsailos.local/websocket\", \"webcamurl\": \"http://mainsailos.local/webcam/?action=stream\"}} }")
         }
         context.openFileInput("storage.json").use { stream ->
             val data = stream.bufferedReader().use {
@@ -38,21 +53,20 @@ class LocalDatabase {
         return localData
     }
 
-    fun writeData(context: Context, data: JSONObject) {
+    fun writeData(data: JSONObject) {
         localData = data
         context.openFileOutput("storage.json", Context.MODE_PRIVATE).use { output ->
-            output.write(localData.toString().toByteArray())
+            output.write(data.toString().toByteArray())
         }
-        readData(context)
     }
 
-    fun create(context: Context, fileName: String, fileData: String){
+    private fun create(fileName: String, fileData: String){
         context.openFileOutput(fileName, Context.MODE_PRIVATE).use { output ->
             output.write(fileData.toByteArray())
         }
     }
 
-    private fun isFilePresent(context: Context, fileName: String): Boolean {
+    private fun isFilePresent(fileName: String): Boolean {
         return File(context.filesDir.absolutePath + "/" + fileName).exists()
     }
 }
