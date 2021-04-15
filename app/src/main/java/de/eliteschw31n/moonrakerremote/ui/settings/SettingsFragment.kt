@@ -1,7 +1,9 @@
 package de.eliteschw31n.moonrakerremote.ui.settings
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.NetworkOnMainThreadException
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +17,9 @@ import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import org.json.JSONObject
-import java.net.URI
+import java.io.BufferedInputStream
+import java.io.IOException
+import java.net.*
 import java.util.*
 
 class SettingsFragment : Fragment() {
@@ -49,10 +53,28 @@ class SettingsFragment : Fragment() {
         val webcamTextEdit = webcamTextLayout.editText
 
         webcamTextEdit?.setText(printerData.getString("webcamurl"))
+        webcamTextLayout.setEndIconOnClickListener {
+            val webcamURL = webcamTextEdit?.text.toString()
+            updateWebcamUrl(webcamURL, webcamTextLayout)
+        }
 
         return root
     }
-    private fun setError(textlayout: TextInputLayout, errorReason: String){
+    private fun setSaved(textlayout: TextInputLayout, saveMessage: String) {
+        MainActivity.runUiUpdate(Runnable {
+            textlayout.helperText = saveMessage
+            textlayout.isHelperTextEnabled = true
+        })
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                MainActivity.runUiUpdate(Runnable {
+                    textlayout.helperText = null
+                    textlayout.isHelperTextEnabled = false
+                })
+            }
+        }, 2000)
+    }
+    private fun setError(textlayout: TextInputLayout, errorReason: String) {
         MainActivity.runUiUpdate(Runnable {
             textlayout.error = errorReason
             textlayout.isErrorEnabled = true
@@ -84,6 +106,30 @@ class SettingsFragment : Fragment() {
             textlayout.editText?.isEnabled = true
         })
     }
+    private fun updateWebcamUrl(url: String, textlayout: TextInputLayout) {
+        toggleInputEdit(textlayout)
+        Thread {
+            val webcamURL = URL(url)
+            val webcamConnection = webcamURL.openConnection() as HttpURLConnection
+            webcamConnection.connectTimeout = 2000
+            webcamConnection.readTimeout = 2000
+            try {
+                webcamConnection.connect()
+                toggleInputEdit(textlayout)
+                if(webcamConnection.contentType.contains("text/html")){
+                    setError(textlayout, "Invalid URL!")
+                    return@Thread
+                }
+                savePrinterData("webcamurl", url)
+                setSaved(textlayout, "Saved URL!")
+            } catch (e: Exception){
+                setError(textlayout, "Invalid URL!")
+                toggleInputEdit(textlayout)
+            } finally {
+                webcamConnection.disconnect()
+            }
+        }.start()
+    }
     private fun updateWebsocket(url: String, textlayout: TextInputLayout) {
         var validated = false
         toggleInputEdit(textlayout)
@@ -91,6 +137,7 @@ class SettingsFragment : Fragment() {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 toggleInputEdit(textlayout)
                 savePrinterData("websocketurl", url)
+                setSaved(textlayout, "Saved URL!")
                 validated = true
                 close()
             }
@@ -98,6 +145,7 @@ class SettingsFragment : Fragment() {
             override fun onMessage(message: String?) {
                 toggleInputEdit(textlayout)
                 savePrinterData("websocketurl", url)
+                setSaved(textlayout, "Saved URL!")
                 validated = true
                 close()
             }
