@@ -1,7 +1,6 @@
 package de.eliteschw31n.moonrakerremote.ui.printer_menu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +12,12 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.json.JSONObject
+import java.util.*
 import kotlin.random.Random
 
 
@@ -38,7 +39,6 @@ class PrinterMenuFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_printer_menu, container, false)
 
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
-        Log.d("profiles", printerProfiles.toString())
         currentPrinter = LocalDatabase.getData().getString("currentPrinter")
 
         printerSelection = root.findViewById(R.id.printer_menu_profile_layout)
@@ -50,7 +50,6 @@ class PrinterMenuFragment : Fragment() {
             defaultData.put("websocketurl", "ws://mainsailos.local/websocket")
             defaultData.put("webcamurl", "http://mainsailos.local/webcam/?action=stream")
             val profileName = generateName()
-            Log.d(profileName, defaultData.toString())
             LocalDatabase.updatePrinterData(profileName, defaultData)
             addPrinterProfileButton(profileName)
         }
@@ -61,27 +60,24 @@ class PrinterMenuFragment : Fragment() {
             val database = LocalDatabase.getData()
             val tag = printerButton.tag.toString()
             database.put("currentPrinter", tag.replace("printer_select_", ""))
+            val oldSelectedProfile: Button = printerSelection.findViewWithTag("printer_select_$currentPrinter")
+            oldSelectedProfile.isEnabled = true
+            currentPrinter = tag.replace("printer_select_", "")
             LocalDatabase.writeData(database)
             NavTitles.updateTitles()
-            loadPrinterProfileButtons()
+            printerButton.isEnabled = false
         }
     }
     private fun loadPrinterProfileButtons() {
-        if(lastButton != 0) {
-            printerSelection.removeAllViews()
-            printerSelection.removeAllViewsInLayout()
-            printerSelection.requestLayout()
-            printerSelection.invalidate()
-            printerSelection.postInvalidate()
-        }
         lastButton = 0
-        val printers = LocalDatabase.getData().getJSONObject("printers")
-        for (printer in printers.keys()){
-            addPrinterProfileButton(printer)
-        }
+        MainActivity.runUiUpdate(Runnable {
+            val printers = LocalDatabase.getData().getJSONObject("printers")
+            for (printer in printers.keys()){
+                addPrinterProfileButton(printer)
+            }
+        })
     }
     private fun addPrinterProfileButton(name: String) {
-        Log.d("printerbutton", "printer_select_$name")
         val printerButton = Button(context)
         printerButton.text = name
         printerButton.id = View.generateViewId()
@@ -101,7 +97,6 @@ class PrinterMenuFragment : Fragment() {
             constrainSet.connect(printerButton.id, ConstraintSet.TOP, lastButton, ConstraintSet.BOTTOM, 16)
         }
         lastButton = printerButton.id
-        Log.d("buttonid", lastButton.toString())
         constrainSet.applyTo(printerSelection)
         handleProfileButton(printerButton)
     }
