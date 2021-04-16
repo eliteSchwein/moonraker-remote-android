@@ -41,6 +41,7 @@ class WebcamFragment : Fragment() {
         webcamStream.settings.loadWithOverviewMode = true
         webcamStream.settings.useWideViewPort = true
         webcamStream.settings.builtInZoomControls = true
+        webcamStream.settings.displayZoomControls = false
 
         webcamStream.setInitialScale(1)
         webcamStream.setPadding(0, 0, 0, 0)
