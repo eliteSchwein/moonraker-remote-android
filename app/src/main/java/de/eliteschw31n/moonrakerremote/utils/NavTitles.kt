@@ -14,6 +14,14 @@ class NavTitles {
             navView = navigationView
         }
 
+        fun updateTitles(){
+            val currentPrinter = LocalDatabase.getData().getString("currentPrinter")
+            val printerData = LocalDatabase.getPrinterData(currentPrinter)
+
+            updateSubTitle(printerData.getString("websocketurl"))
+            updateTitle(currentPrinter)
+        }
+
         fun updateTitle(title: String) {
             MainActivity.runUiUpdate(Runnable {
                 val header = navView.getHeaderView(0)

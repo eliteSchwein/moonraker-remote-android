@@ -91,7 +91,7 @@ class SettingsFragment : Fragment() {
         database.put("currentPrinter", name)
         LocalDatabase.writeData(database)
         currentPrinter = name
-        updateNavTitles()
+        NavTitles.updateTitles()
     }
     private fun setSaved(textlayout: TextInputLayout, saveMessage: String) {
         MainActivity.runUiUpdate(Runnable {
@@ -126,7 +126,7 @@ class SettingsFragment : Fragment() {
 
         printerData.put(key, data)
         LocalDatabase.updatePrinterData(currentPrinter, printerData)
-        updateNavTitles()
+        NavTitles.updateTitles()
     }
     private fun toggleInputEdit(textlayout: TextInputLayout){
         MainActivity.runUiUpdate(Runnable {
@@ -160,10 +160,6 @@ class SettingsFragment : Fragment() {
                 webcamConnection.disconnect()
             }
         }.start()
-    }
-    private fun updateNavTitles() {
-        NavTitles.updateSubTitle(printerData.getString("websocketurl"))
-        NavTitles.updateTitle(currentPrinter)
     }
     private fun updateWebsocket(url: String, textlayout: TextInputLayout) {
         var validated = false
