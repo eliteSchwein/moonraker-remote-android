@@ -1,6 +1,7 @@
 package de.eliteschw31n.moonrakerremote.utils
 
 import android.content.Context
+import android.util.Log
 import de.eliteschw31n.moonrakerremote.MainActivity
 import org.json.JSONObject
 import java.io.File

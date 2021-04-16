@@ -25,6 +25,7 @@ import java.util.*
 class SettingsFragment : Fragment() {
     private lateinit var webSocketClient: WebSocketClient
     private lateinit var printerData: JSONObject
+    private lateinit var printerProfiles: JSONObject
     private lateinit var currentPrinter: String
 
     override fun onCreateView(
@@ -36,10 +37,32 @@ class SettingsFragment : Fragment() {
 
         currentPrinter = LocalDatabase.getData().getString("currentPrinter")
         printerData = LocalDatabase.getPrinterData(currentPrinter)
+        printerProfiles = LocalDatabase.getData().getJSONObject("printers")
 
         val nameTextLayout: TextInputLayout = root.findViewById(R.id.input_settings_connection_name)
         val nameTextEdit = nameTextLayout.editText
         nameTextEdit?.setText(currentPrinter)
+        nameTextLayout.setEndIconOnClickListener {
+            val profileName = nameTextEdit?.text.toString()
+            if(profileName.isNullOrBlank() || profileName.isNullOrEmpty()){
+                setError(nameTextLayout, "Empty!")
+                return@setEndIconOnClickListener
+            }
+            if(profileName.length > 64) {
+                setError(nameTextLayout, "Too long (max: 64)!")
+                return@setEndIconOnClickListener
+            }
+            printerProfiles.keys().forEach {
+                val profile = it
+                Log.d("profile", profile)
+                if(profileName == profile){
+                    setError(nameTextLayout, "Name already in use!")
+                    return@setEndIconOnClickListener
+                }
+            }
+            replaceName(profileName)
+            setSaved(nameTextLayout, "Saved new Profile Name!")
+        }
 
         val websocketTextLayout: TextInputLayout = root.findViewById(R.id.input_settings_connection_websocket)
         val websocketTextEdit = websocketTextLayout.editText
@@ -59,6 +82,16 @@ class SettingsFragment : Fragment() {
         }
 
         return root
+    }
+    private fun replaceName(name:String) {
+        printerProfiles.remove(currentPrinter)
+        printerProfiles.put(name, printerData)
+        val database = LocalDatabase.getData()
+        database.put("printers", printerProfiles)
+        database.put("currentPrinter", name)
+        LocalDatabase.writeData(database)
+        currentPrinter = name
+        updateNavTitles()
     }
     private fun setSaved(textlayout: TextInputLayout, saveMessage: String) {
         MainActivity.runUiUpdate(Runnable {
@@ -93,9 +126,7 @@ class SettingsFragment : Fragment() {
 
         printerData.put(key, data)
         LocalDatabase.updatePrinterData(currentPrinter, printerData)
-
-        NavTitles.updateSubTitle(printerData.getString("websocketurl"))
-        NavTitles.updateTitle(currentPrinter)
+        updateNavTitles()
     }
     private fun toggleInputEdit(textlayout: TextInputLayout){
         MainActivity.runUiUpdate(Runnable {
@@ -129,6 +160,10 @@ class SettingsFragment : Fragment() {
                 webcamConnection.disconnect()
             }
         }.start()
+    }
+    private fun updateNavTitles() {
+        NavTitles.updateSubTitle(printerData.getString("websocketurl"))
+        NavTitles.updateTitle(currentPrinter)
     }
     private fun updateWebsocket(url: String, textlayout: TextInputLayout) {
         var validated = false
