@@ -324,4 +324,8 @@
     <color name="white">#FFFFFF</color>
     <!-- White -->
 
+    <!-- Black -->
+    <color name="transparent">#00000000</color>
+    <!-- Black -->
+
 </resources>

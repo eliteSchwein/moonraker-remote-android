@@ -1,16 +1,20 @@
 package de.eliteschw31n.moonrakerremote.ui.printer_menu
 
+import android.graphics.drawable.Icon
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
@@ -27,15 +31,11 @@ class PrinterMenuFragment : Fragment() {
     private lateinit var printerSelection: ConstraintLayout
     private var lastButton: Int = 0
 
-    private lateinit var printerMenuViewModel: PrinterMenuViewModel
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        printerMenuViewModel =
-                ViewModelProvider(this).get(PrinterMenuViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_printer_menu, container, false)
 
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
@@ -55,8 +55,13 @@ class PrinterMenuFragment : Fragment() {
         }
         return root
     }
-    private fun handleProfileEditButton(printerButton: Button) {
-
+    private fun handleProfileEditButton(printerEditButton: ImageButton) {
+        printerEditButton.setOnClickListener {
+            val database = LocalDatabase.getData()
+            val tag = printerEditButton.tag.toString()
+            database.put("currentPrinter", tag.replace("printer_edit_", ""))
+            findNavController().navigate(R.id.nav_printer_settings)
+        }
     }
     private fun handleProfileButton(printerButton: Button) {
         printerButton.setOnClickListener {
@@ -99,28 +104,31 @@ class PrinterMenuFragment : Fragment() {
         if(lastButton != 0) {
             constrainSet.connect(printerButton.id, ConstraintSet.TOP, lastButton, ConstraintSet.BOTTOM, 16)
         }
+        constrainSet.connect(printerButton.id, ConstraintSet.LEFT, R.id.printer_settings_activity, ConstraintSet.LEFT, 32)
+        constrainSet.connect(printerButton.id, ConstraintSet.RIGHT, R.id.printer_settings_activity, ConstraintSet.RIGHT, 32)
         lastButton = printerButton.id
+        addPrinterProfileEditButton(name)
         constrainSet.applyTo(printerSelection)
         handleProfileButton(printerButton)
-        addPrinterProfileEditButton(name)
     }
     private fun addPrinterProfileEditButton(name: String) {
-        val printerEditButton = Button(context)
-        printerEditButton.text = "edit"
+        val printerEditButton = ImageButton(context)
+        printerEditButton.setImageResource(R.drawable.ic_settings_edit)
+        printerEditButton.setBackgroundResource(R.color.transparent)
         printerEditButton.id = View.generateViewId()
         printerEditButton.tag = "printer_edit_$name"
+        Log.d("test", "printer_edit_$name")
         val layoutParams =
                 LinearLayout.LayoutParams(
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT)
+                        RelativeLayout.LayoutParams.MATCH_PARENT)
         printerEditButton.layoutParams = layoutParams
-        if(currentPrinter == name){
-            printerEditButton.isEnabled = false
-        }
         printerSelection.addView(printerEditButton)
         val constrainSet = ConstraintSet()
         constrainSet.clone(printerSelection)
-        constrainSet.connect(lastButton, ConstraintSet.RIGHT, printerEditButton.id, ConstraintSet.RIGHT, 16)
+        constrainSet.connect(printerEditButton.id, ConstraintSet.RIGHT, lastButton, ConstraintSet.RIGHT, 32)
+        constrainSet.connect(printerEditButton.id, ConstraintSet.TOP, lastButton, ConstraintSet.TOP, 0)
+        constrainSet.connect(printerEditButton.id, ConstraintSet.BOTTOM, lastButton, ConstraintSet.BOTTOM, 0)
         constrainSet.applyTo(printerSelection)
         handleProfileEditButton(printerEditButton)
     }
