@@ -106,12 +106,12 @@ class PrinterMenuFragment : Fragment() {
     }
     private fun addPrinterProfileEditButton(name: String) {
         val printerEditButton = Button(context)
-        printerEditButton.text = "name"
+        printerEditButton.text = "edit"
         printerEditButton.id = View.generateViewId()
         printerEditButton.tag = "printer_edit_$name"
         val layoutParams =
                 LinearLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT)
         printerEditButton.layoutParams = layoutParams
         if(currentPrinter == name){
