@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.settings.SettingsFragment">
@@ -33,20 +34,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/settings_connection_name"
+        app:endIconContentDescription="@string/settings_connection_rename"
+        app:endIconDrawable="@drawable/ic_settings_save"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings_title"
-        app:startIconContentDescription="@string/settings_connection_name"
-        app:endIconMode="custom"
-        app:endIconDrawable="@drawable/ic_settings_save"
-        app:endIconContentDescription="@string/settings_connection_rename">
+        app:startIconContentDescription="@string/settings_connection_name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
             android:lines="1"
-            android:singleLine="true"/>
+            android:maxLines="1"
+            android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,19 +60,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/settings_connection_ip"
+        app:endIconContentDescription="@string/settings_connection_save_url"
+        app:endIconDrawable="@drawable/ic_settings_save"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_name"
-        app:startIconContentDescription="@string/settings_connection_ip"
-        app:endIconMode="custom"
-        app:endIconDrawable="@drawable/ic_settings_save"
-        app:endIconContentDescription="@string/settings_connection_save_url">
+        app:startIconContentDescription="@string/settings_connection_ip">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
             android:lines="1"
+            android:maxLines="1"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -85,19 +86,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/settings_connection_stream_url"
+        app:endIconContentDescription="@string/settings_connection_save_url"
+        app:endIconDrawable="@drawable/ic_settings_save"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_websocket"
-        app:startIconContentDescription="@string/settings_connection_stream_url"
-        app:endIconMode="custom"
-        app:endIconDrawable="@drawable/ic_settings_save"
-        app:endIconContentDescription="@string/settings_connection_save_url">
+        app:startIconContentDescription="@string/settings_connection_stream_url">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
             android:lines="1"
+            android:maxLines="1"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -108,6 +109,19 @@
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/settings_delete_profile" />
+
+    <Button
+        android:id="@+id/settings_delete_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/settings_connection_delete"
+        app:backgroundTint="@color/red_800"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_stream_url" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

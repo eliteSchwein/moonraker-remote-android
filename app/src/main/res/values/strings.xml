@@ -16,6 +16,7 @@
     <string name="settings_connection_ip">Websocket URL</string>
     <string name="settings_connection_save_url">Save URL</string>
     <string name="settings_connection_rename">Rename Printer</string>
+    <string name="settings_connection_delete">Remove Printer</string>
     <string name="settings_connection_stream_url">Cam Stream URL</string>
 
     <string name="printer_menu_title">Select Printer</string>

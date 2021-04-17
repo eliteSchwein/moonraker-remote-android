@@ -8,7 +8,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
@@ -27,6 +34,7 @@ class SettingsFragment : Fragment() {
     private lateinit var printerData: JSONObject
     private lateinit var printerProfiles: JSONObject
     private lateinit var currentPrinter: String
+    private lateinit var fragmentLayout: ConstraintLayout
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -38,6 +46,16 @@ class SettingsFragment : Fragment() {
         currentPrinter = LocalDatabase.getData().getString("currentPrinter")
         printerData = LocalDatabase.getPrinterData(currentPrinter)
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
+
+        fragmentLayout = root.findViewById(R.id.settings_activity)
+
+        val deleteButton : Button = root.findViewById(R.id.settings_delete_profile)
+
+        if(printerProfiles.length() > 1) {
+            handleDeleteButton(deleteButton)
+        } else {
+            fragmentLayout.removeView(deleteButton)
+        }
 
         val nameTextLayout: TextInputLayout = root.findViewById(R.id.input_settings_connection_name)
         val nameTextEdit = nameTextLayout.editText
@@ -80,8 +98,20 @@ class SettingsFragment : Fragment() {
             val webcamURL = webcamTextEdit?.text.toString()
             updateWebcamUrl(webcamURL, webcamTextLayout)
         }
-
         return root
+    }
+
+    private fun handleDeleteButton(deleteButton: Button) {
+        deleteButton.setOnClickListener {
+            printerProfiles.remove(currentPrinter)
+            val database = LocalDatabase.getData()
+            database.put("printers", printerProfiles)
+            database.put("currentPrinter", printerProfiles.keys().next())
+            LocalDatabase.writeData(database)
+            currentPrinter = LocalDatabase.getData().getString("currentPrinter")
+            NavTitles.updateTitles()
+            findNavController().navigate(R.id.nav_printer_menu)
+        }
     }
     private fun replaceName(name:String) {
         printerProfiles.remove(currentPrinter)
