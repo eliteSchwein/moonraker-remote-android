@@ -24,9 +24,15 @@
         tools:layout="@layout/fragment_settings" />
 
     <fragment
+        android:id="@+id/nav_printer_settings"
+        android:name="de.eliteschw31n.moonrakerremote.ui.printer_settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_printer_settings" />
+
+    <fragment
         android:id="@+id/nav_printer_menu"
         android:name="de.eliteschw31n.moonrakerremote.ui.printer_menu.PrinterMenuFragment"
         android:label="@string/menu_printer_menu"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_printer_menu" />
 
 </navigation>

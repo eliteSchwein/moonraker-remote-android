@@ -2,22 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_activity"
+    android:id="@+id/printer_settings_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment">
+    tools:context=".ui.printer_settings.SettingsFragment">
 
     <TextView
-        android:id="@+id/settings_title"
+        android:id="@+id/printer_settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/settings_connection_title"
+        android:text="@string/printer_settings_title"
         android:textAlignment="textStart"
         android:textColor="@color/teal_500"
-        android:textSize="14sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -26,21 +26,21 @@
         app:layout_constraintVertical_bias="0.011" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_settings_connection_name"
+        android:id="@+id/input_printer_settings_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="@string/settings_connection_name"
-        app:endIconContentDescription="@string/settings_connection_rename"
+        android:hint="@string/printer_settings_name"
+        app:endIconContentDescription="@string/printer_settings_rename"
         app:endIconDrawable="@drawable/ic_settings_save"
         app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_title"
-        app:startIconContentDescription="@string/settings_connection_name">
+        app:layout_constraintTop_toBottomOf="@+id/printer_settings_title"
+        app:startIconContentDescription="@string/printer_settings_name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -52,21 +52,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_settings_connection_websocket"
+        android:id="@+id/input_printer_settings_websocket"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="@string/settings_connection_ip"
-        app:endIconContentDescription="@string/settings_connection_save_url"
+        android:hint="@string/printer_settings_websocket_url"
+        app:endIconContentDescription="@string/printer_settings_save_url"
         app:endIconDrawable="@drawable/ic_settings_save"
         app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_name"
-        app:startIconContentDescription="@string/settings_connection_ip">
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_name"
+        app:startIconContentDescription="@string/printer_settings_websocket_url">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -78,21 +78,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_settings_connection_stream_url"
+        android:id="@+id/input_printer_settings_stream_url"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="@string/settings_connection_stream_url"
-        app:endIconContentDescription="@string/settings_connection_save_url"
+        android:hint="@string/printer_settings_stream_url"
+        app:endIconContentDescription="@string/printer_settings_save_url"
         app:endIconDrawable="@drawable/ic_settings_save"
         app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_websocket"
-        app:startIconContentDescription="@string/settings_connection_stream_url">
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_websocket"
+        app:startIconContentDescription="@string/printer_settings_stream_url">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -102,17 +102,40 @@
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
     <Button
-        android:id="@+id/settings_delete_profile"
-        android:layout_width="0dp"
+        android:id="@+id/printer_settings_delete_profile"
+        android:layout_width="379dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/settings_connection_delete"
+        android:text="@string/printer_settings_delete"
         app:backgroundTint="@color/red_800"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_settings_connection_stream_url" />
+        app:layout_constraintTop_toBottomOf="@+id/printer_settings_load_fluidd" />
+
+    <Button
+        android:id="@+id/printer_settings_load_fluidd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/printer_settings_fluidd"
+        android:drawableLeft="@drawable/ic_settings_fluidd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
+
+    <Button
+        android:id="@+id/printer_settings_load_mainsail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/ic_settings_mainsail"
+        android:text="@string/printer_settings_mainsail"
+        app:layout_constraintStart_toEndOf="@+id/printer_settings_load_fluidd"
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

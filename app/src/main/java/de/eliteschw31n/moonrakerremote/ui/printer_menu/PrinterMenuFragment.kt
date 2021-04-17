@@ -55,6 +55,9 @@ class PrinterMenuFragment : Fragment() {
         }
         return root
     }
+    private fun handleProfileEditButton(printerButton: Button) {
+
+    }
     private fun handleProfileButton(printerButton: Button) {
         printerButton.setOnClickListener {
             val database = LocalDatabase.getData()
@@ -99,6 +102,27 @@ class PrinterMenuFragment : Fragment() {
         lastButton = printerButton.id
         constrainSet.applyTo(printerSelection)
         handleProfileButton(printerButton)
+        addPrinterProfileEditButton(name)
+    }
+    private fun addPrinterProfileEditButton(name: String) {
+        val printerEditButton = Button(context)
+        printerEditButton.text = "name"
+        printerEditButton.id = View.generateViewId()
+        printerEditButton.tag = "printer_edit_$name"
+        val layoutParams =
+                LinearLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT)
+        printerEditButton.layoutParams = layoutParams
+        if(currentPrinter == name){
+            printerEditButton.isEnabled = false
+        }
+        printerSelection.addView(printerEditButton)
+        val constrainSet = ConstraintSet()
+        constrainSet.clone(printerSelection)
+        constrainSet.connect(lastButton, ConstraintSet.RIGHT, printerEditButton.id, ConstraintSet.RIGHT, 16)
+        constrainSet.applyTo(printerSelection)
+        handleProfileEditButton(printerEditButton)
     }
     private fun generateName(): String {
         val generatedName = "profile" + Random.nextInt(0, 1000)

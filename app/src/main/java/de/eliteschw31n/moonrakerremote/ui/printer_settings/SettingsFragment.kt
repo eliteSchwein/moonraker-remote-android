@@ -1,4 +1,4 @@
-package de.eliteschw31n.moonrakerremote.ui.settings
+package de.eliteschw31n.moonrakerremote.ui.printer_settings
 
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +17,6 @@ import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import org.json.JSONObject
-import java.io.IOException
 import java.net.*
 import java.util.*
 
@@ -25,7 +24,7 @@ class SettingsFragment : Fragment() {
     private lateinit var webSocketClient: WebSocketClient
     private lateinit var printerData: JSONObject
     private lateinit var printerProfiles: JSONObject
-    private lateinit var currentPrinter: String
+    private lateinit var currentEditPrinter: String
     private lateinit var fragmentLayout: ConstraintLayout
 
     override fun onCreateView(
@@ -33,15 +32,15 @@ class SettingsFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_settings, container, false)
+        val root = inflater.inflate(R.layout.fragment_printer_settings, container, false)
 
-        currentPrinter = LocalDatabase.getData().getString("currentPrinter")
-        printerData = LocalDatabase.getPrinterData(currentPrinter)
+        currentEditPrinter = LocalDatabase.getData().getString("currentEditPrinter")
+        printerData = LocalDatabase.getPrinterData(currentEditPrinter)
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
 
-        fragmentLayout = root.findViewById(R.id.settings_activity)
+        fragmentLayout = root.findViewById(R.id.printer_settings_activity)
 
-        val deleteButton : Button = root.findViewById(R.id.settings_delete_profile)
+        val deleteButton : Button = root.findViewById(R.id.printer_settings_delete_profile)
 
         if(printerProfiles.length() > 1) {
             handleDeleteButton(deleteButton)
@@ -49,9 +48,9 @@ class SettingsFragment : Fragment() {
             fragmentLayout.removeView(deleteButton)
         }
 
-        val nameTextLayout: TextInputLayout = root.findViewById(R.id.input_settings_connection_name)
+        val nameTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_name)
         val nameTextEdit = nameTextLayout.editText
-        nameTextEdit?.setText(currentPrinter)
+        nameTextEdit?.setText(currentEditPrinter)
         nameTextLayout.setEndIconOnClickListener {
             val profileName = nameTextEdit?.text.toString()
             if(profileName.isNullOrBlank() || profileName.isNullOrEmpty()){
@@ -74,7 +73,7 @@ class SettingsFragment : Fragment() {
             setSaved(nameTextLayout, "Saved new Profile Name!")
         }
 
-        val websocketTextLayout: TextInputLayout = root.findViewById(R.id.input_settings_connection_websocket)
+        val websocketTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_websocket)
         val websocketTextEdit = websocketTextLayout.editText
         websocketTextEdit?.setText(printerData.getString("websocketurl"))
         websocketTextLayout.setEndIconOnClickListener {
@@ -82,7 +81,7 @@ class SettingsFragment : Fragment() {
             updateWebsocket(websocketURL, websocketTextLayout)
         }
 
-        val webcamTextLayout: TextInputLayout = root.findViewById(R.id.input_settings_connection_stream_url)
+        val webcamTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_stream_url)
         val webcamTextEdit = webcamTextLayout.editText
 
         webcamTextEdit?.setText(printerData.getString("webcamurl"))
@@ -95,24 +94,25 @@ class SettingsFragment : Fragment() {
 
     private fun handleDeleteButton(deleteButton: Button) {
         deleteButton.setOnClickListener {
-            printerProfiles.remove(currentPrinter)
+            printerProfiles.remove(currentEditPrinter)
             val database = LocalDatabase.getData()
             database.put("printers", printerProfiles)
             database.put("currentPrinter", printerProfiles.keys().next())
             LocalDatabase.writeData(database)
-            currentPrinter = LocalDatabase.getData().getString("currentPrinter")
             NavTitles.updateTitles()
             findNavController().navigate(R.id.nav_printer_menu)
         }
     }
     private fun replaceName(name:String) {
-        printerProfiles.remove(currentPrinter)
+        printerProfiles.remove(currentEditPrinter)
         printerProfiles.put(name, printerData)
         val database = LocalDatabase.getData()
         database.put("printers", printerProfiles)
-        database.put("currentPrinter", name)
+        if(database.getString("currentPrinter") == currentEditPrinter){
+            database.put("currentPrinter", name)
+        }
         LocalDatabase.writeData(database)
-        currentPrinter = name
+        currentEditPrinter = name
         NavTitles.updateTitles()
     }
     private fun setSaved(textlayout: TextInputLayout, saveMessage: String) {
@@ -144,10 +144,10 @@ class SettingsFragment : Fragment() {
         }, 2000)
     }
     private fun savePrinterData(key: String, data: Any) {
-        printerData = LocalDatabase.getPrinterData(currentPrinter)
+        printerData = LocalDatabase.getPrinterData(currentEditPrinter)
 
         printerData.put(key, data)
-        LocalDatabase.updatePrinterData(currentPrinter, printerData)
+        LocalDatabase.updatePrinterData(currentEditPrinter, printerData)
         NavTitles.updateTitles()
     }
     private fun toggleInputEdit(textlayout: TextInputLayout){
