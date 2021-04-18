@@ -55,6 +55,7 @@
         android:clickable="true"
         android:src="@drawable/ic_fab_add"
         app:backgroundTint="?attr/colorSecondary"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

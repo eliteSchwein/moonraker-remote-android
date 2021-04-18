@@ -111,32 +111,34 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/printer_settings_delete"
+        android:textColor="@color/white"
         app:backgroundTint="@color/red_800"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/printer_settings_load_fluidd" />
+        app:layout_constraintTop_toBottomOf="@+id/printer_settings_auto_discover" />
 
     <Button
-        android:id="@+id/printer_settings_load_fluidd"
+        android:id="@+id/printer_settings_auto_discover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:drawableLeft="@drawable/ic_settings_fluidd"
-        android:text="@string/printer_settings_fluidd"
+        android:drawableLeft="@drawable/ic_settings_autodiscovery"
+        android:drawableTint="@android:color/white"
+        android:text="@string/printer_settings_auto_discover"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
-    <Button
-        android:id="@+id/printer_settings_load_mainsail"
+    <ProgressBar
+        android:id="@+id/printer_settings_discovery_loading"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:drawableLeft="@drawable/ic_settings_mainsail"
-        android:text="@string/printer_settings_mainsail"
-        app:layout_constraintStart_toEndOf="@+id/printer_settings_load_fluidd"
+        app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

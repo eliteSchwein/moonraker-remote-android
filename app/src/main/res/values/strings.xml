@@ -24,6 +24,7 @@
     <string name="printer_settings_websocket_url">Websocket URL</string>
     <string name="printer_settings_stream_url">Cam Stream URL</string>
     <string name="printer_settings_fluidd">Fluidd</string>
+    <string name="printer_settings_auto_discover">Search</string>
     <string name="printer_settings_mainsail">Mainsail</string>
     <string name="printer_settings_save_url">Save URL</string>
     <string name="printer_settings_rename">Rename Printer</string>

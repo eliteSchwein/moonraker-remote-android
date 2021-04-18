@@ -1,5 +1,6 @@
 package de.eliteschw31n.moonrakerremote.ui.printer_menu
 
+import android.graphics.PorterDuff
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
+import de.eliteschw31n.moonrakerremote.utils.AutoDiscovery
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.json.JSONObject
@@ -30,6 +32,7 @@ class PrinterMenuFragment : Fragment() {
     private lateinit var currentPrinter: String
     private lateinit var printerSelection: ConstraintLayout
     private var lastButton: Int = 0
+    private var discovery = AutoDiscovery()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -115,9 +118,8 @@ class PrinterMenuFragment : Fragment() {
         val printerEditButton = ImageButton(context)
         printerEditButton.setImageResource(R.drawable.ic_settings_edit)
         printerEditButton.setBackgroundResource(R.color.transparent)
-        printerEditButton.id = View.generateViewId()
+                printerEditButton.id = View.generateViewId()
         printerEditButton.tag = "printer_edit_$name"
-        Log.d("test", "printer_edit_$name")
         val layoutParams =
                 LinearLayout.LayoutParams(
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
