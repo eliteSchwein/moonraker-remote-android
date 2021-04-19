@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
+import de.eliteschw31n.moonrakerremote.utils.AutoDiscovery
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.java_websocket.client.WebSocketClient
@@ -26,6 +28,10 @@ class SettingsFragment : Fragment() {
     private lateinit var printerProfiles: JSONObject
     private lateinit var currentPrinter: String
     private lateinit var fragmentLayout: ConstraintLayout
+    private lateinit var websocketTextLayout: TextInputLayout
+    private lateinit var webcamTextLayout: TextInputLayout
+    private lateinit var discoveryLoading: ProgressBar
+    private val autoDiscovery = AutoDiscovery()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -40,6 +46,9 @@ class SettingsFragment : Fragment() {
 
         fragmentLayout = root.findViewById(R.id.printer_settings_activity)
 
+        discoveryLoading = root.findViewById(R.id.printer_settings_discovery_loading)
+        discoveryLoading.visibility = View.INVISIBLE
+
         val deleteButton : Button = root.findViewById(R.id.printer_settings_delete_profile)
 
         if(printerProfiles.length() > 1) {
@@ -47,6 +56,9 @@ class SettingsFragment : Fragment() {
         } else {
             fragmentLayout.removeView(deleteButton)
         }
+
+        val discoveryButton : Button = root.findViewById(R.id.printer_settings_auto_discover)
+        handleDiscoveryButton(discoveryButton)
 
         val nameTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_name)
         val nameTextEdit = nameTextLayout.editText
@@ -73,7 +85,7 @@ class SettingsFragment : Fragment() {
             setSaved(nameTextLayout, "Saved new Profile Name!")
         }
 
-        val websocketTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_websocket)
+        websocketTextLayout = root.findViewById(R.id.input_printer_settings_websocket)
         val websocketTextEdit = websocketTextLayout.editText
         websocketTextEdit?.setText(printerData.getString("websocketurl"))
         websocketTextLayout.setEndIconOnClickListener {
@@ -81,7 +93,7 @@ class SettingsFragment : Fragment() {
             updateWebsocket(websocketURL, websocketTextLayout)
         }
 
-        val webcamTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_stream_url)
+        webcamTextLayout = root.findViewById(R.id.input_printer_settings_stream_url)
         val webcamTextEdit = webcamTextLayout.editText
 
         webcamTextEdit?.setText(printerData.getString("webcamurl"))
@@ -90,6 +102,25 @@ class SettingsFragment : Fragment() {
             updateWebcamUrl(webcamURL, webcamTextLayout)
         }
         return root
+    }
+
+    private fun handleDiscoveryButton(discoveryButton: Button) {
+        discoveryButton.setOnClickListener {
+            val validConnection = autoDiscovery.searchAddresses()
+            if(!validConnection) {
+                setDiscoveryError(discoveryButton, "Invalid Connection")
+                return@setOnClickListener
+            }
+            discoveryButton.isEnabled = false
+            discoveryLoading.visibility = View.VISIBLE
+            Thread {
+                while (autoDiscovery.isScanning()){ }
+                MainActivity.runUiUpdate(Runnable {
+                    discoveryButton.isEnabled = true
+                    discoveryLoading.visibility = View.INVISIBLE
+                })
+            }.start()
+        }
     }
 
     private fun handleDeleteButton(deleteButton: Button) {
@@ -125,6 +156,18 @@ class SettingsFragment : Fragment() {
                 MainActivity.runUiUpdate(Runnable {
                     textlayout.helperText = null
                     textlayout.isHelperTextEnabled = false
+                })
+            }
+        }, 2000)
+    }
+    private fun setDiscoveryError(discoveryButton: Button, errorReason: String) {
+        MainActivity.runUiUpdate(Runnable {
+            discoveryButton.error = errorReason
+        })
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                MainActivity.runUiUpdate(Runnable {
+                    discoveryButton.error = null
                 })
             }
         }, 2000)

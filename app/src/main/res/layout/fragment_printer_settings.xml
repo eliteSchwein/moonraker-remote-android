@@ -141,4 +141,14 @@
         app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

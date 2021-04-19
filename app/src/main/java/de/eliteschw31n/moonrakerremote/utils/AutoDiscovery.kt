@@ -23,11 +23,18 @@ class AutoDiscovery {
     private lateinit var partialIP: String
     private var discoveredAddresses: JSONObject = JSONObject()
     private var subIP = 1
+    private var scanning = false
 
+    fun isScanning(): Boolean {
+        return scanning
+    }
     fun getAddresses(): JSONObject {
         return discoveredAddresses
     }
     fun searchAddresses(): Boolean {
+        if(scanning) {
+            return false
+        }
         val context = MainActivity.applicationContext().applicationContext
         val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val currentNetwork = connManager.activeNetworkInfo
@@ -43,9 +50,11 @@ class AutoDiscovery {
 
     private fun discoverAddresses() {
         if(subIP == 255){
+            scanning = false
             return
         }
         Thread {
+            scanning = true
             var nextScanTriggered = false
             val webSocketClient = object : WebSocketClient(URI("ws://$partialIP$subIP/websocket"), Draft_6455(), null, 100) {
                 override fun onOpen(handshakedata: ServerHandshake?) {
