@@ -31,32 +31,39 @@ class AutoDiscovery {
     fun getAddresses(): JSONObject {
         return discoveredAddresses
     }
-    fun searchAddresses(): Boolean {
+    fun searchAddresses(): String {
         if(scanning) {
-            return false
+            return "Already Scanning!"
         }
         val context = MainActivity.applicationContext().applicationContext
         val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val currentNetwork = connManager.activeNetworkInfo
         if(currentNetwork?.type != ConnectivityManager.TYPE_WIFI) {
-            return false
+            return "Not Connected to Wifi"
         }
         val ipAddress = getIPAddress(true)
         partialIP = "${ipAddress?.subSequence(0, ipAddress.lastIndexOf(".") + 1)}"
         subIP = 1
-        discoverAddresses()
-        return true
+        scanning = true
+        discoverAddresses(false)
+        return "Scanning..."
     }
 
-    private fun discoverAddresses() {
+    private fun discoverAddresses(useAltPort: Boolean) {
         if(subIP == 255){
-            scanning = false
+            this.scanning = false
             return
         }
+        var websocketURL = "ws://$partialIP$subIP/websocket"
+        if(useAltPort){
+            websocketURL = "ws://$partialIP$subIP:7125/websocket"
+        }
         Thread {
-            scanning = true
+            if(!useAltPort) {
+                scanning = true
+            }
             var nextScanTriggered = false
-            val webSocketClient = object : WebSocketClient(URI("ws://$partialIP$subIP/websocket"), Draft_6455(), null, 100) {
+            val webSocketClient = object : WebSocketClient(URI(websocketURL), Draft_6455(), null, 100) {
                 override fun onOpen(handshakedata: ServerHandshake?) {
                     send("{\"jsonrpc\": \"2.0\",\"method\": \"printer.info\",\"id\": ${Random.nextInt(1,10000)}}")
                 }
@@ -67,24 +74,27 @@ class AutoDiscovery {
                         val jsonResult = jsonMessage.getJSONObject("result")
                         if(jsonResult.has("klipper_path")){
                             val discoveredPrinter = JSONObject()
-                            discoveredPrinter.put("websocket", "ws://$partialIP$subIP/websocket")
-                            discoveredPrinter.put("webcamurl", "ws://$partialIP$subIP/webcam/?action=stream")
+                            discoveredPrinter.put("websocketurl", websocketURL)
+                            discoveredPrinter.put("webcamurl", "http://$partialIP$subIP/webcam/?action=stream")
                             discoveredAddresses.put(partialIP + subIP, discoveredPrinter)
-                            Log.d("Discovered Printer", "$partialIP$subIP")
+                            Log.d("Discovered Printer", websocketURL)
                         }
                     }
                     close()
                 }
 
                 override fun onClose(code: Int, reason: String?, remote: Boolean) {
-                    if(!nextScanTriggered) {
+                    if(!nextScanTriggered && !useAltPort) {
                         scanNextDiscovery()
                         nextScanTriggered = true
                     }
                 }
 
                 override fun onError(ex: Exception?) {
-                    if(!nextScanTriggered) {
+                    if(!useAltPort) {
+                        discoverAddresses(true)
+                    }
+                    if(!nextScanTriggered && !useAltPort) {
                         scanNextDiscovery()
                         nextScanTriggered = true
                     }
@@ -95,7 +105,7 @@ class AutoDiscovery {
     }
     private fun scanNextDiscovery() {
         subIP++
-        discoverAddresses()
+        discoverAddresses(false)
     }
 
     private fun getIPAddress(useIPv4: Boolean): String? {

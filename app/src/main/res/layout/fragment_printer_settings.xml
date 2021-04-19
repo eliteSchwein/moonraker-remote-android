@@ -116,7 +116,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/printer_settings_auto_discover" />
+        app:layout_constraintTop_toBottomOf="@+id/printer_settings_discovery_save_text" />
 
     <Button
         android:id="@+id/printer_settings_auto_discover"
@@ -142,13 +142,35 @@
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/printer_settings_discovery_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/printer_settings_discovery_error"
+        android:textColor="@color/red_800"
+        android:textSize="16dp"
+        app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
+
+    <Button
+        android:id="@+id/printer_settings_discovery_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/printer_settings_discovery_next"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
+        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
+
+    <TextView
+        android:id="@+id/printer_settings_discovery_save_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
-        app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
+        android:text="@string/printer_settings_discovery_save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/printer_settings_auto_discover" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

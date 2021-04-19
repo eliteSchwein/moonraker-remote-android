@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.AutoDiscovery
+import de.eliteschw31n.moonrakerremote.utils.InputUtil
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.java_websocket.client.WebSocketClient
@@ -30,8 +32,7 @@ class SettingsFragment : Fragment() {
     private lateinit var fragmentLayout: ConstraintLayout
     private lateinit var websocketTextLayout: TextInputLayout
     private lateinit var webcamTextLayout: TextInputLayout
-    private lateinit var discoveryLoading: ProgressBar
-    private val autoDiscovery = AutoDiscovery()
+    private val discoveryHandler = DiscoveryHandler()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -40,14 +41,13 @@ class SettingsFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_printer_settings, container, false)
 
+        discoveryHandler.setView(root)
+
         currentPrinter = LocalDatabase.getData().getString("currentPrinter")
         printerData = LocalDatabase.getPrinterData(currentPrinter)
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
 
         fragmentLayout = root.findViewById(R.id.printer_settings_activity)
-
-        discoveryLoading = root.findViewById(R.id.printer_settings_discovery_loading)
-        discoveryLoading.visibility = View.INVISIBLE
 
         val deleteButton : Button = root.findViewById(R.id.printer_settings_delete_profile)
 
@@ -57,32 +57,29 @@ class SettingsFragment : Fragment() {
             fragmentLayout.removeView(deleteButton)
         }
 
-        val discoveryButton : Button = root.findViewById(R.id.printer_settings_auto_discover)
-        handleDiscoveryButton(discoveryButton)
-
         val nameTextLayout: TextInputLayout = root.findViewById(R.id.input_printer_settings_name)
         val nameTextEdit = nameTextLayout.editText
         nameTextEdit?.setText(currentPrinter)
         nameTextLayout.setEndIconOnClickListener {
             val profileName = nameTextEdit?.text.toString()
             if(profileName.isNullOrBlank() || profileName.isNullOrEmpty()){
-                setError(nameTextLayout, "Empty!")
+                InputUtil.setError(nameTextLayout, "Empty!")
                 return@setEndIconOnClickListener
             }
             if(profileName.length > 64) {
-                setError(nameTextLayout, "Too long (max: 64)!")
+                InputUtil.setError(nameTextLayout, "Too long (max: 64)!")
                 return@setEndIconOnClickListener
             }
             printerProfiles.keys().forEach {
                 val profile = it
                 Log.d("profile", profile)
                 if(profileName == profile){
-                    setError(nameTextLayout, "Name already in use!")
+                    InputUtil.setError(nameTextLayout, "Name already in use!")
                     return@setEndIconOnClickListener
                 }
             }
             replaceName(profileName)
-            setSaved(nameTextLayout, "Saved new Profile Name!")
+            InputUtil.setSuccess(nameTextLayout, "Saved new Profile Name!")
         }
 
         websocketTextLayout = root.findViewById(R.id.input_printer_settings_websocket)
@@ -101,26 +98,8 @@ class SettingsFragment : Fragment() {
             val webcamURL = webcamTextEdit?.text.toString()
             updateWebcamUrl(webcamURL, webcamTextLayout)
         }
+        discoveryHandler.init()
         return root
-    }
-
-    private fun handleDiscoveryButton(discoveryButton: Button) {
-        discoveryButton.setOnClickListener {
-            val validConnection = autoDiscovery.searchAddresses()
-            if(!validConnection) {
-                setDiscoveryError(discoveryButton, "Invalid Connection")
-                return@setOnClickListener
-            }
-            discoveryButton.isEnabled = false
-            discoveryLoading.visibility = View.VISIBLE
-            Thread {
-                while (autoDiscovery.isScanning()){ }
-                MainActivity.runUiUpdate(Runnable {
-                    discoveryButton.isEnabled = true
-                    discoveryLoading.visibility = View.INVISIBLE
-                })
-            }.start()
-        }
     }
 
     private fun handleDeleteButton(deleteButton: Button) {
@@ -146,46 +125,6 @@ class SettingsFragment : Fragment() {
         currentPrinter = name
         NavTitles.updateTitles()
     }
-    private fun setSaved(textlayout: TextInputLayout, saveMessage: String) {
-        MainActivity.runUiUpdate(Runnable {
-            textlayout.helperText = saveMessage
-            textlayout.isHelperTextEnabled = true
-        })
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                MainActivity.runUiUpdate(Runnable {
-                    textlayout.helperText = null
-                    textlayout.isHelperTextEnabled = false
-                })
-            }
-        }, 2000)
-    }
-    private fun setDiscoveryError(discoveryButton: Button, errorReason: String) {
-        MainActivity.runUiUpdate(Runnable {
-            discoveryButton.error = errorReason
-        })
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                MainActivity.runUiUpdate(Runnable {
-                    discoveryButton.error = null
-                })
-            }
-        }, 2000)
-    }
-    private fun setError(textlayout: TextInputLayout, errorReason: String) {
-        MainActivity.runUiUpdate(Runnable {
-            textlayout.error = errorReason
-            textlayout.isErrorEnabled = true
-        })
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                MainActivity.runUiUpdate(Runnable {
-                    textlayout.error = null
-                    textlayout.isErrorEnabled = false
-                })
-            }
-        }, 2000)
-    }
     private fun savePrinterData(key: String, data: Any) {
         printerData = LocalDatabase.getPrinterData(currentPrinter)
 
@@ -193,17 +132,8 @@ class SettingsFragment : Fragment() {
         LocalDatabase.updatePrinterData(currentPrinter, printerData)
         NavTitles.updateTitles()
     }
-    private fun toggleInputEdit(textlayout: TextInputLayout){
-        MainActivity.runUiUpdate(Runnable {
-            if(textlayout.editText?.isEnabled == true){
-                textlayout.editText?.isEnabled = false
-                return@Runnable
-            }
-            textlayout.editText?.isEnabled = true
-        })
-    }
     private fun updateWebcamUrl(url: String, textlayout: TextInputLayout) {
-        toggleInputEdit(textlayout)
+        InputUtil.toggleInputEdit(textlayout)
         Thread {
             val webcamURL = URL(url)
             val webcamConnection = webcamURL.openConnection() as HttpURLConnection
@@ -211,16 +141,16 @@ class SettingsFragment : Fragment() {
             webcamConnection.readTimeout = 2000
             try {
                 webcamConnection.connect()
-                toggleInputEdit(textlayout)
+                InputUtil.toggleInputEdit(textlayout)
                 if(webcamConnection.contentType.contains("text/html")){
-                    setError(textlayout, "Invalid URL!")
+                    InputUtil.setError(textlayout, "Invalid URL!")
                     return@Thread
                 }
                 savePrinterData("webcamurl", url)
-                setSaved(textlayout, "Saved URL!")
+                InputUtil.setSuccess(textlayout, "Saved URL!")
             } catch (e: Exception){
-                setError(textlayout, "Invalid URL!")
-                toggleInputEdit(textlayout)
+                InputUtil.setError(textlayout, "Invalid URL!")
+                InputUtil.toggleInputEdit(textlayout)
             } finally {
                 webcamConnection.disconnect()
             }
@@ -228,34 +158,34 @@ class SettingsFragment : Fragment() {
     }
     private fun updateWebsocket(url: String, textlayout: TextInputLayout) {
         var validated = false
-        toggleInputEdit(textlayout)
+        InputUtil.toggleInputEdit(textlayout)
         webSocketClient = object : WebSocketClient(URI(url)) {
             override fun onOpen(handshakedata: ServerHandshake?) {
-                toggleInputEdit(textlayout)
+                InputUtil.toggleInputEdit(textlayout)
                 savePrinterData("websocketurl", url)
-                setSaved(textlayout, "Saved URL!")
+                InputUtil.setSuccess(textlayout, "Saved URL!")
                 validated = true
                 close()
             }
 
             override fun onMessage(message: String?) {
-                toggleInputEdit(textlayout)
+                InputUtil.toggleInputEdit(textlayout)
                 savePrinterData("websocketurl", url)
-                setSaved(textlayout, "Saved URL!")
+                InputUtil.setSuccess(textlayout, "Saved URL!")
                 validated = true
                 close()
             }
 
             override fun onClose(code: Int, reason: String?, remote: Boolean) {
                 if(!validated){
-                    toggleInputEdit(textlayout)
-                    setError(textlayout, "Invalid URL!")
+                    InputUtil.toggleInputEdit(textlayout)
+                    InputUtil.setError(textlayout, "Invalid URL!")
                 }
             }
 
             override fun onError(ex: Exception?) {
-                toggleInputEdit(textlayout)
-                setError(textlayout, "Invalid URL!")
+                InputUtil.toggleInputEdit(textlayout)
+                InputUtil.setError(textlayout, "Invalid URL!")
                 validated = true
             }
         }
