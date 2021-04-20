@@ -1,54 +1,56 @@
 package de.eliteschw31n.moonrakerremote.ui.settings
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.textfield.TextInputLayout
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
-import java.util.*
+import de.eliteschw31n.moonrakerremote.NotificationActionHandler
+import de.eliteschw31n.moonrakerremote.utils.NotificationUtil
+
 
 class SettingsFragment : Fragment() {
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
 
+        val notifyTestButton : Button = root.findViewById(R.id.settings_notify)
+        notifyTestButton.setOnClickListener {
+            val intentAction = Intent(context, NotificationActionHandler::class.java)
+            intentAction.putExtra("action","actionName")
+            val pendingIntent = PendingIntent.getBroadcast(context,1,intentAction,PendingIntent.FLAG_UPDATE_CURRENT);
+            val notifyBuilder = NotificationCompat.Builder(MainActivity.applicationContext(), "-1")
+                .setSmallIcon(R.drawable.ic_app_logo)
+                .setContentTitle("Title")
+                .setContentText("LONG TEXT MAYBE")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .addAction(R.drawable.ic_app_logo, "action1", pendingIntent)
+            NotificationUtil.notify(notifyBuilder, 1)
+        }
 
+        val notifyTestButton2 : Button = root.findViewById(R.id.settings_notify2)
+        notifyTestButton2.setOnClickListener {
+            val intentAction = Intent(context, NotificationActionHandler::class.java)
+            intentAction.putExtra("action","actionName")
+            val pendingIntent = PendingIntent.getBroadcast(context,1,intentAction,PendingIntent.FLAG_UPDATE_CURRENT);
+            val notifyBuilder = NotificationCompat.Builder(MainActivity.applicationContext(), "-1")
+                    .setSmallIcon(R.drawable.ic_app_logo)
+                    .setContentTitle("Title2")
+                    .setContentText("LONG TEXT MAYBE")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .addAction(R.drawable.ic_app_logo, "action1", pendingIntent)
+            NotificationUtil.notify(notifyBuilder, 1)
+        }
         return root
-    }
-
-    private fun setSaved(textlayout: TextInputLayout, saveMessage: String) {
-        MainActivity.runUiUpdate(Runnable {
-            textlayout.helperText = saveMessage
-            textlayout.isHelperTextEnabled = true
-        })
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                MainActivity.runUiUpdate(Runnable {
-                    textlayout.helperText = null
-                    textlayout.isHelperTextEnabled = false
-                })
-            }
-        }, 2000)
-    }
-    private fun setError(textlayout: TextInputLayout, errorReason: String) {
-        MainActivity.runUiUpdate(Runnable {
-            textlayout.error = errorReason
-            textlayout.isErrorEnabled = true
-        })
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                MainActivity.runUiUpdate(Runnable {
-                    textlayout.error = null
-                    textlayout.isErrorEnabled = false
-                })
-            }
-        }, 2000)
     }
 }

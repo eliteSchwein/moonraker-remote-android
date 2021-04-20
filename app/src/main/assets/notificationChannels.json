@@ -1,0 +1,14 @@
+{
+  "-1" : {
+    "description" : "testchannel",
+    "name" : "test"
+  },
+  "1" : {
+    "description" : "Notifications about the current Printer status",
+    "name" : "Printer Status"
+  },
+  "2" : {
+    "description" : "Notifications about moonraker Updates",
+    "name" : "Update Message"
+  }
+}

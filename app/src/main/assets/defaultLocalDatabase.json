@@ -1,0 +1,9 @@
+{
+  "currentPrinter":"default",
+  "printers":{
+    "default":{
+      "websocketurl":"ws://mainsailos.local/websocket",
+      "webcamurl":"http://mainsailos.local/webcam/?action=stream"
+    }
+  }
+}

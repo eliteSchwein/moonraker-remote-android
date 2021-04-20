@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
+import de.eliteschw31n.moonrakerremote.utils.NotificationUtil
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        NotificationUtil.registerChannels()
 
         LocalDatabase.readData()
 
