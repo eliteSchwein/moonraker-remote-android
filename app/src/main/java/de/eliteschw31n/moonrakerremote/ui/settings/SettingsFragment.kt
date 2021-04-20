@@ -28,15 +28,15 @@ class SettingsFragment : Fragment() {
         notifyTestButton.setOnClickListener {
             val intentAction = Intent(context, NotificationActionHandler::class.java)
             intentAction.putExtra("action","actionName")
+            intentAction.putExtra("notificationID", 1)
+            intentAction.putExtra("closeNotifications", true)
             val pendingIntent = PendingIntent.getBroadcast(context,1,intentAction,PendingIntent.FLAG_UPDATE_CURRENT);
             val notifyBuilder = NotificationCompat.Builder(MainActivity.applicationContext(), "-1")
                 .setSmallIcon(R.drawable.ic_app_logo)
                 .setContentTitle("Title")
                 .setContentText("LONG TEXT MAYBE")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                //.addAction(R.drawable.ic_app_logo, "action1", pendingIntent)
+                .addAction(R.drawable.ic_app_logo, "action1", pendingIntent)
             NotificationUtil.notify(notifyBuilder, 1)
         }
 

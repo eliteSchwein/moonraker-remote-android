@@ -26,6 +26,11 @@ class NotificationUtil {
                 notify( id, notifyBuilder.build())
             }
         }
+        fun close(id: Int) {
+            with(NotificationManagerCompat.from(MainActivity.applicationContext())) {
+                cancel(id)
+            }
+        }
         private fun registerChannel(id: String, name: String, description: String) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
