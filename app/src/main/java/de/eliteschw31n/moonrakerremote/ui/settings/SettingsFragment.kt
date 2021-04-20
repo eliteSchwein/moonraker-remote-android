@@ -35,7 +35,8 @@ class SettingsFragment : Fragment() {
                 .setContentText("LONG TEXT MAYBE")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .addAction(R.drawable.ic_app_logo, "action1", pendingIntent)
+                .setContentIntent(pendingIntent)
+                //.addAction(R.drawable.ic_app_logo, "action1", pendingIntent)
             NotificationUtil.notify(notifyBuilder, 1)
         }
 
