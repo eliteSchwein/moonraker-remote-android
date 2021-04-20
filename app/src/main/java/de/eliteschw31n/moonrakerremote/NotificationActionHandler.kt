@@ -7,7 +7,6 @@ import android.util.Log
 
 class NotificationActionHandler : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-
         val action = intent.getStringExtra("action")
         Log.d("action", action.toString())
 
