@@ -1,9 +1,6 @@
 package de.eliteschw31n.moonrakerremote.ui.printer_menu
 
-import android.graphics.PorterDuff
-import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +11,13 @@ import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
-import de.eliteschw31n.moonrakerremote.utils.AutoDiscovery
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.json.JSONObject
-import java.util.*
 import kotlin.random.Random
 
 
@@ -32,7 +26,6 @@ class PrinterMenuFragment : Fragment() {
     private lateinit var currentPrinter: String
     private lateinit var printerSelection: ConstraintLayout
     private var lastButton: Int = 0
-    private var discovery = AutoDiscovery()
 
     override fun onCreateView(
             inflater: LayoutInflater,

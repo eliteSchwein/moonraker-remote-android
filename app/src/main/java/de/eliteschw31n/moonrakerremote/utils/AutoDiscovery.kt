@@ -2,13 +2,9 @@ package de.eliteschw31n.moonrakerremote.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.wifi.WifiManager
 import android.util.Log
-import com.google.android.material.textfield.TextInputLayout
 import de.eliteschw31n.moonrakerremote.MainActivity
-import kotlinx.coroutines.withTimeout
 import org.java_websocket.client.WebSocketClient
-import org.java_websocket.drafts.Draft
 import org.java_websocket.drafts.Draft_6455
 import org.java_websocket.handshake.ServerHandshake
 import org.json.JSONObject

@@ -1,6 +1,5 @@
 package de.eliteschw31n.moonrakerremote.utils
 
-import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.navigation.NavigationView
 import de.eliteschw31n.moonrakerremote.MainActivity
