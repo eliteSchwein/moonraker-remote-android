@@ -35,12 +35,6 @@ class DiscoveryHandler {
         discoveryErrorText = fragmentView.findViewById(R.id.printer_settings_discovery_error_text)
         discoverySaveText = fragmentView.findViewById(R.id.printer_settings_discovery_save_text)
         discoveryDiscoverButton= fragmentView.findViewById(R.id.printer_settings_auto_discover)
-        MainActivity.runUiUpdate(Runnable {
-            discoveryLoading.visibility = View.INVISIBLE
-            discoveryErrorText.visibility = View.INVISIBLE
-            discoverySaveText.visibility = View.INVISIBLE
-            discoveryNextButton.visibility = View.INVISIBLE
-        })
         handleDiscoveryButton()
         handleDiscoveryNextButton()
     }

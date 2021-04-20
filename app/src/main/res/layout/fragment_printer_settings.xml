@@ -138,6 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
@@ -150,6 +151,7 @@
         android:text="@string/printer_settings_discovery_error"
         android:textColor="@color/red_800"
         android:textSize="16dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
@@ -161,6 +163,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/printer_settings_discovery_next"
         android:textColor="@color/white"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/printer_settings_auto_discover"
         app:layout_constraintTop_toBottomOf="@+id/input_printer_settings_stream_url" />
 
@@ -171,6 +174,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/printer_settings_discovery_save"
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/printer_settings_auto_discover" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
