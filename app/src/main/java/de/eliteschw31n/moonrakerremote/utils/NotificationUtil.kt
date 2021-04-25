@@ -22,9 +22,11 @@ class NotificationUtil {
             }
         }
         fun notify(notifyBuilder: NotificationCompat.Builder, id: Int) {
-            with(NotificationManagerCompat.from(MainActivity.applicationContext())) {
-                notify( id, notifyBuilder.build())
-            }
+            MainActivity.runUiUpdate(Runnable {
+                with(NotificationManagerCompat.from(MainActivity.applicationContext())) {
+                    notify( id, notifyBuilder.build())
+                }
+            })
         }
         fun close(id: Int) {
             with(NotificationManagerCompat.from(MainActivity.applicationContext())) {

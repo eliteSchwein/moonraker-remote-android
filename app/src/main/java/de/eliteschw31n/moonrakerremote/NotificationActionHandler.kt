@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import de.eliteschw31n.moonrakerremote.tasks.WebsocketTask
 import de.eliteschw31n.moonrakerremote.utils.NotificationUtil
 
 class NotificationActionHandler : BroadcastReceiver() {
@@ -18,6 +19,10 @@ class NotificationActionHandler : BroadcastReceiver() {
         }
         if(notificationId != 0) {
             NotificationUtil.close(notificationId)
+        }
+
+        if(action.toString() == "websocketReconnect") {
+            WebsocketTask.reconnect()
         }
     }
 }
