@@ -1,6 +1,13 @@
 package de.eliteschw31n.moonrakerremote.tasks
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import de.eliteschw31n.moonrakerremote.MainActivity
+import de.eliteschw31n.moonrakerremote.NotificationActionHandler
+import de.eliteschw31n.moonrakerremote.R
+import de.eliteschw31n.moonrakerremote.utils.NotificationUtil
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft_6455
 import org.java_websocket.handshake.ServerHandshake
@@ -14,15 +21,27 @@ class WebsocketTask {
         private lateinit var websocket: WebSocketClient
         private var validServer = false
 
+
         fun disconnect() {
             Thread.currentThread().stop()
         }
 
+        fun isConnected(): Boolean {
+            if(!this::websocket.isInitialized) {
+                return false
+            }
+            return websocket.isOpen
+        }
+
         fun connect(URL: String) {
-            disconnect()
+            if(isConnected()) {
+                disconnect()
+            }
             backgroundThread = Thread {
+                Log.d("Connect", URL)
                 websocket = object : WebSocketClient(URI(URL), Draft_6455(), null, 100) {
                     override fun onOpen(handshakedata: ServerHandshake?) {
+                        Log.d("connected", "with what")
                         send("{\"jsonrpc\": \"2.0\",\"method\": \"printer.info\",\"id\": ${Random.nextInt(1,10000)}}")
                     }
 
@@ -37,15 +56,38 @@ class WebsocketTask {
                     }
 
                     override fun onClose(code: Int, reason: String?, remote: Boolean) {
-
+                        val intentAction = Intent(MainActivity.applicationContext(), NotificationActionHandler::class.java)
+                        intentAction.putExtra("action","Reconnect")
+                        intentAction.putExtra("notificationID", 1)
+                        intentAction.putExtra("closeNotifications", true)
+                        val pendingIntent = PendingIntent.getBroadcast(MainActivity.applicationContext(),1,intentAction, PendingIntent.FLAG_UPDATE_CURRENT);
+                        val notifyBuilder = NotificationCompat.Builder(MainActivity.applicationContext(), "1")
+                                .setSmallIcon(R.drawable.ic_disconnected)
+                                .setContentTitle("Connection Lost")
+                                .setContentText("Reason: $reason")
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .addAction(R.drawable.ic_app_logo, "reconnect?", pendingIntent)
+                        NotificationUtil.notify(notifyBuilder, 1)
                     }
 
                     override fun onError(ex: Exception?) {
-
+                        val intentAction = Intent(MainActivity.applicationContext(), NotificationActionHandler::class.java)
+                        intentAction.putExtra("action","Reconnect")
+                        intentAction.putExtra("notificationID", 1)
+                        intentAction.putExtra("closeNotifications", true)
+                        val pendingIntent = PendingIntent.getBroadcast(MainActivity.applicationContext(),1,intentAction, PendingIntent.FLAG_UPDATE_CURRENT);
+                        val notifyBuilder = NotificationCompat.Builder(MainActivity.applicationContext(), "1")
+                                .setSmallIcon(R.drawable.ic_disconnected)
+                                .setContentTitle("Connection Lost")
+                                .setContentText("Reason: Error")
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .addAction(R.drawable.ic_app_logo, "reconnect?", pendingIntent)
+                        NotificationUtil.notify(notifyBuilder, 1)
                     }
                 }
                 websocket.connect()
             }
+            backgroundThread.start()
         }
     }
 }

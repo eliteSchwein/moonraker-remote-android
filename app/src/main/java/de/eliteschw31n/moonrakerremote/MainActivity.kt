@@ -13,6 +13,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import de.eliteschw31n.moonrakerremote.tasks.WebsocketTask
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import de.eliteschw31n.moonrakerremote.utils.NotificationUtil
@@ -58,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         val printers = LocalDatabase.getData().getJSONObject("printers")
         val currentPrinter = LocalDatabase.getData().getString("currentPrinter")
         val currentPrinterJson = printers.getJSONObject(currentPrinter)
+
+        WebsocketTask.connect(currentPrinterJson.getString("websocketurl"))
 
         NavTitles.setNavView(navView)
 
