@@ -29,4 +29,6 @@
     <string name="printer_settings_delete">Remove Printer</string>
 
     <string name="printer_menu_title">Select Printer</string>
+
+    <string name="component_printer_select_title">Moonraker Server</string>
 </resources>
