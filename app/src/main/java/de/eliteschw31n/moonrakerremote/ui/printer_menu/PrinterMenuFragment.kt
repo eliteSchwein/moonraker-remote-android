@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -15,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
+import de.eliteschw31n.moonrakerremote.ui.components.PrinterSelect
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import org.json.JSONObject
@@ -25,6 +23,7 @@ class PrinterMenuFragment : Fragment() {
     private lateinit var printerProfiles: JSONObject
     private lateinit var currentPrinter: String
     private lateinit var printerSelection: ConstraintLayout
+    private lateinit var profilesLayout: FrameLayout
     private var lastButton: Int = 0
 
     override fun onCreateView(
@@ -38,7 +37,10 @@ class PrinterMenuFragment : Fragment() {
         currentPrinter = LocalDatabase.getData().getString("currentPrinter")
 
         printerSelection = root.findViewById(R.id.printer_menu_profile_layout)
-        loadPrinterProfileButtons()
+
+        profilesLayout = root.findViewById(R.id.printer_menu_profiles_layout)
+        //loadPrinterProfileButtons()
+        loadPrinterProfiles()
 
         val addButton: FloatingActionButton = root.findViewById(R.id.printer_menu_add)
         addButton.setOnClickListener {
@@ -80,6 +82,22 @@ class PrinterMenuFragment : Fragment() {
                 addPrinterProfileButton(printer)
             }
         })
+    }
+    private fun loadPrinterProfiles() {
+        lastButton = 0
+        MainActivity.runUiUpdate(Runnable {
+            val printers = LocalDatabase.getData().getJSONObject("printers")
+            for (printer in printers.keys()){
+                addPrinterProfile(printer)
+            }
+        })
+    }
+    private fun addPrinterProfile(name: String) {
+        var printerProfile = PrinterSelect()
+        val profileData = LocalDatabase.getPrinterData(name)
+        var fragmentTransaction = MainActivity.supportFragmentManager().beginTransaction()
+        fragmentTransaction.add(R.id.printer_menu_profiles_layout, printerProfile)
+        fragmentTransaction.commit()
     }
     private fun addPrinterProfileButton(name: String) {
         val printerButton = Button(context)

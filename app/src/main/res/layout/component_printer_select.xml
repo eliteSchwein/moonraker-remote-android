@@ -51,9 +51,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:gravity="center_vertical"
+            android:paddingStart="20dp"
             android:text="@string/component_printer_select_title"
-            android:textSize="20sp"
-            tools:layout_marginStart="20dp"></TextView>
+            android:textSize="20sp"></TextView>
 
     </com.google.android.material.appbar.AppBarLayout>
 

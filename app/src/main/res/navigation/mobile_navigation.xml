@@ -35,4 +35,9 @@
         android:label="@string/menu_printer_menu"
         tools:layout="@layout/fragment_printer_menu" />
 
+    <fragment
+        android:id="@+id/component_printer_select"
+        android:name="de.eliteschw31n.moonrakerremote.ui.components.PrinterSelect"
+        tools:layout="@layout/component_printer_select" />
+
 </navigation>
