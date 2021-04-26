@@ -6,23 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.components.PrinterSelect">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:src="@drawable/ic_settings_edit"
-        app:layout_constraintBottom_toBottomOf="@+id/webcam_preview"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <WebView
         android:id="@+id/webcam_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
+        android:layout_height="match_parent">
     </WebView>
+
+    <TextView
+        android:id="@+id/component_printer_select_data"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        android:text="@string/component_printer_select_data"
+        android:textSize="20sp"
+        android:textColor="@color/red_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/component_printer_select_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        app:backgroundTint="@color/grey_600"
+        android:src="@drawable/ic_settings_edit"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="18dp" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -30,7 +44,7 @@
         android:theme="@style/Theme.MoonrakerRemote.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/component_printer_select_title"
