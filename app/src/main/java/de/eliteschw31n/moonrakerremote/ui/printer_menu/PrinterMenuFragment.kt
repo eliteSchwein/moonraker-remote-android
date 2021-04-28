@@ -88,7 +88,9 @@ class PrinterMenuFragment : Fragment() {
         }
         val profileView = printerProfile.view
         val profileTitle: TextView = profileView!!.findViewById(R.id.component_printer_select_title)
-        profileTitle.text = name
+        MainActivity.runUiUpdate(Runnable {
+            profileTitle.text = name
+        })
     }
 
     private fun generateName(): String {
