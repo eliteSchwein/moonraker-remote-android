@@ -75,7 +75,7 @@ class PrinterMenuFragment : Fragment() {
             profilesLayout.addView(subLayout)
             constraintSet.clone(profilesLayout)
             if(lastProfile != 0 ){
-                constraintSet.connect(subLayout.id, ConstraintSet.TOP, lastProfile, ConstraintSet.BOTTOM, 32)
+                constraintSet.connect(subLayout.id, ConstraintSet.TOP, lastProfile, ConstraintSet.BOTTOM, 64)
             }
             constraintSet.applyTo(profilesLayout)
             lastProfile = subLayout.id

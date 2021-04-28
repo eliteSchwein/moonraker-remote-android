@@ -26,7 +26,7 @@ class WebsocketTask {
         }
 
         fun disconnect() {
-            Thread.currentThread().stop()
+            Thread.currentThread().interrupt()
         }
 
         fun isConnected(): Boolean {
@@ -41,6 +41,12 @@ class WebsocketTask {
                 disconnect()
             }
             backgroundThread = Thread {
+                if(Thread.interrupted()) {
+                    if(isConnected()) {
+                        websocket.close()
+                        return@Thread
+                    }
+                }
                 websocket = object : WebSocketClient(URI(URL), Draft_6455(), null, 100) {
                     override fun onOpen(handshakedata: ServerHandshake?) {
                         send("{\"jsonrpc\": \"2.0\",\"method\": \"printer.info\",\"id\": ${Random.nextInt(1,10000)}}")
