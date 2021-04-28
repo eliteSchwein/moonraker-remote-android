@@ -326,8 +326,8 @@
 
     <!-- Transparent -->
     <color name="transparent">#00000000</color>
-    <color name="transparent_blue_grey_500">#CE607D8B</color>
-    <color name="transparent_grey_500">#CE9E9E9E</color>
+    <color name="transparent_blue_grey_500">#B0607D8B</color>
+    <color name="transparent_grey_500">#B09E9E9E</color>
     <!-- Transparent -->
 
 </resources>
