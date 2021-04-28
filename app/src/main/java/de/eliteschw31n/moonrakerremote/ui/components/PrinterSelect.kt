@@ -98,6 +98,9 @@ class PrinterSelect : Fragment()  {
         cameraPreview.settings.builtInZoomControls = false
         cameraPreview.settings.displayZoomControls = false
 
+        cameraPreview.isVerticalScrollBarEnabled = false
+        cameraPreview.isHorizontalScrollBarEnabled = false
+
         cameraPreview.setInitialScale(1)
         cameraPreview.setPadding(0, 0, 0, 0)
 
@@ -112,6 +115,10 @@ class PrinterSelect : Fragment()  {
                     false -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_error_light.html") }
                 }
             }
+        }
+
+        cameraPreview.setOnTouchListener { v, event ->
+            true
         }
     }
 }
