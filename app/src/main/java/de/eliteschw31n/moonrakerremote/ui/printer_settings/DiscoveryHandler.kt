@@ -47,7 +47,7 @@ class DiscoveryHandler {
         val nextIndex = addressesKeys.next()
         val nextAddresses = discoveredAddresses.getJSONObject(nextIndex)
 
-        val currentPrinter = LocalDatabase.getData().getString("currentPrinter")
+        val currentPrinter = LocalDatabase.getData().getString("editPrinter")
 
         val websocketTextLayout : TextInputLayout = fragmentView.findViewById(R.id.input_printer_settings_websocket)
         val websocketTextEdit = websocketTextLayout.editText
