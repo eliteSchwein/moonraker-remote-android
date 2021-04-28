@@ -23,8 +23,8 @@ import kotlin.random.Random
 class PrinterMenuFragment : Fragment() {
     private lateinit var printerProfiles: JSONObject
     private lateinit var currentPrinter: String
-    private lateinit var profilesLayout: FrameLayout
-    private var lastProfile: String = ""
+    private lateinit var profilesLayout: ConstraintLayout
+    private var lastProfile: Int = 0
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -46,15 +46,17 @@ class PrinterMenuFragment : Fragment() {
             defaultData.put("webcamurl", "http://mainsailos.local/webcam/?action=stream")
             val profileName = generateName()
             LocalDatabase.updatePrinterData(profileName, defaultData)
-            addPrinterProfile(profileName)
+            Thread {
+                addPrinterProfile(profileName)
+            }
         }
         return root
     }
     private fun loadPrinterProfiles() {
-        lastProfile = ""
+        lastProfile = 0
         Thread {
             Thread.sleep(250)
-            for (printer in printerProfiles.keys()){
+            for (printer in printerProfiles.keys()) {
                 addPrinterProfile(printer)
                 Thread.sleep(100)
             }
@@ -62,8 +64,26 @@ class PrinterMenuFragment : Fragment() {
     }
     private fun addPrinterProfile(name: String) {
         val printerProfile = PrinterSelect()
+        val subLayout = FrameLayout(MainActivity.applicationContext())
+        val layoutParams =
+                LinearLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        600)
+        val constraintSet = ConstraintSet()
+        subLayout.id = View.generateViewId()
+        subLayout.layoutParams = layoutParams
+        Log.d("id", lastProfile.toString())
+        MainActivity.runUiUpdate(Runnable {
+            profilesLayout.addView(subLayout)
+            constraintSet.clone(profilesLayout)
+            if(lastProfile != 0 ){
+                constraintSet.connect(subLayout.id, ConstraintSet.TOP, lastProfile, ConstraintSet.BOTTOM, 32)
+            }
+            constraintSet.applyTo(profilesLayout)
+            lastProfile = subLayout.id
+        })
         val fragmentTransaction = MainActivity.supportFragmentManager().beginTransaction()
-        fragmentTransaction.add(R.id.printer_menu_profiles_layout, printerProfile, "printer_profile_$name")
+        fragmentTransaction.add(subLayout.id, printerProfile)
         fragmentTransaction.commit()
         while (printerProfile.view == null) {
             Thread.sleep(100)

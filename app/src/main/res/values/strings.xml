@@ -30,6 +30,5 @@
 
     <string name="printer_menu_title">Select Printer</string>
 
-    <string name="component_printer_select_title">Moonraker Server</string>
-    <string name="component_printer_select_data">{"websocketurl":"", "webcamurl":""}</string>
+    <string name="component_printer_select_title"></string>
 </resources>
