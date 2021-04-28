@@ -324,8 +324,10 @@
     <color name="white">#FFFFFF</color>
     <!-- White -->
 
-    <!-- Black -->
+    <!-- Transparent -->
     <color name="transparent">#00000000</color>
-    <!-- Black -->
+    <color name="transparent_blue_grey_500">#CE607D8B</color>
+    <color name="transparent_grey_500">#CE9E9E9E</color>
+    <!-- Transparent -->
 
 </resources>

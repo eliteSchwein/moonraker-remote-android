@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.components.PrinterSelect">
 
-    <WebView
-        android:id="@+id/webcam_preview"
+    <View
+        android:id="@+id/component_printer_select_click_area"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </WebView>
+        android:layout_height="match_parent"
+        android:elevation="2dp"
+        android:clickable="true"
+        android:background="@color/transparent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/component_printer_select_edit"
@@ -19,6 +21,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:clickable="true"
+        android:elevation="3dp"
         app:backgroundTint="@color/grey_600"
         android:src="@drawable/ic_settings_edit"
         app:fabSize="mini"
@@ -26,23 +29,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="18dp" />
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.MoonrakerRemote.AppBarOverlay"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/component_printer_select_title"
+        <WebView
+            android:id="@+id/webcam_preview"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="center_vertical"
-            android:paddingStart="20dp"
-            android:text="@string/component_printer_select_title"
-            android:textSize="20sp"></TextView>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="56dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        </WebView>
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:theme="@style/Theme.MoonrakerRemote.AppBarOverlay"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/component_printer_select_title"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:text="@string/component_printer_select_title"
+                android:textSize="20sp"></TextView>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

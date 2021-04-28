@@ -12,16 +12,22 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
+import de.eliteschw31n.moonrakerremote.utils.NavTitles
+import de.eliteschw31n.moonrakerremote.utils.Theme
 import org.json.JSONObject
 
 class PrinterSelect : Fragment()  {
 
     private lateinit var profileData: JSONObject
     private lateinit var cameraPreview: WebView
+    private lateinit var editButton: FloatingActionButton
+    private lateinit var clickArea: View
+    private lateinit var title: TextView
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -29,17 +35,56 @@ class PrinterSelect : Fragment()  {
             savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.component_printer_select, container, false)
-        val title: TextView = root.findViewById(R.id.component_printer_select_title)
+
+        title = root.findViewById(R.id.component_printer_select_title)
         cameraPreview = root.findViewById(R.id.webcam_preview)
-        val editButton: FloatingActionButton = root.findViewById(R.id.component_printer_select_edit)
+        editButton = root.findViewById(R.id.component_printer_select_edit)
+        clickArea = root.findViewById(R.id.component_printer_select_click_area)
+
+        when (Theme.isDarkMode()) {
+            true -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_loading.html") }
+            false -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_loading_light.html") }
+        }
+
         Thread {
-            while (title.text == "") { }
+            while (title.text == "") {
+                Thread.sleep(1000)
+            }
             profileData = LocalDatabase.getPrinterData(title.text.toString())
             MainActivity.runUiUpdate(Runnable {
+                handleClickArea()
+                handleEditButton()
                 loadPreview()
+                if(LocalDatabase.getData().getString("currentPrinter") == title.text.toString()) {
+                    clickArea.isClickable = false
+                    clickArea.setBackgroundResource(R.color.transparent_grey_500)
+                }
             })
         }.start()
         return root
+    }
+
+    private fun handleClickArea() {
+        clickArea.setOnClickListener {
+            val currentPrinter = LocalDatabase.getData().getString("currentPrinter")
+            val currentFragment = MainActivity.supportFragmentManager().findFragmentByTag("printer_profile_$currentPrinter")
+            val currentClickArea: View? = currentFragment?.view?.findViewById(R.id.component_printer_select_click_area)
+            LocalDatabase.updateCurrentPrinter(title.text.toString())
+            NavTitles.updateTitles()
+            MainActivity.runUiUpdate(Runnable {
+                currentClickArea?.isClickable = true
+                currentClickArea?.setBackgroundResource(R.color.transparent)
+                clickArea.isClickable = false
+                clickArea.setBackgroundResource(R.color.transparent_grey_500)
+            })
+        }
+    }
+
+    private fun handleEditButton() {
+        editButton.setOnClickListener {
+            LocalDatabase.setCurrentEditPrinter(title.text.toString())
+            findNavController().navigate(R.id.nav_printer_settings)
+        }
     }
 
     private fun loadPreview() {
@@ -60,7 +105,10 @@ class PrinterSelect : Fragment()  {
                     request: WebResourceRequest?,
                     error: WebResourceError?
             ) {
-                cameraPreview.loadUrl("file:///android_asset/webcam_preview_error.html")
+                when (Theme.isDarkMode()) {
+                    true -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_error.html") }
+                    false -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_error_light.html") }
+                }
             }
         }
     }

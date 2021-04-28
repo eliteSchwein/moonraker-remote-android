@@ -23,6 +23,13 @@ class LocalDatabase {
                 .getJSONObject("printers")
                 .getJSONObject(printer)
         }
+        fun updateCurrentPrinter(name: String) {
+            localDatabase.localData.put("currentPrinter", name)
+            writeData(localDatabase.localData)
+        }
+        fun setCurrentEditPrinter(name: String) {
+            localDatabase.localData.put("editPrinter", name)
+        }
         fun updatePrinterData(printer: String, printerData: JSONObject) {
             val data  = localDatabase.getData()
             val printersData = data

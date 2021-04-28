@@ -39,7 +39,7 @@ class SettingsFragment : Fragment() {
 
         discoveryHandler.setView(root)
 
-        currentPrinter = LocalDatabase.getData().getString("currentPrinter")
+        currentPrinter = LocalDatabase.getData().getString("editPrinter")
         printerData = LocalDatabase.getPrinterData(currentPrinter)
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
 
@@ -103,7 +103,9 @@ class SettingsFragment : Fragment() {
             printerProfiles.remove(currentPrinter)
             val database = LocalDatabase.getData()
             database.put("printers", printerProfiles)
-            database.put("currentPrinter", printerProfiles.keys().next())
+            if(LocalDatabase.getData().getString("currentPrinter") == currentPrinter) {
+                database.put("currentPrinter", printerProfiles.keys().next())
+            }
             LocalDatabase.writeData(database)
             NavTitles.updateTitles()
             findNavController().navigate(R.id.nav_printer_menu)

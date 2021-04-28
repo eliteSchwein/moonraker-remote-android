@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
+import de.eliteschw31n.moonrakerremote.utils.Theme
 import org.json.JSONObject
 
 class WebcamFragment : Fragment() {
@@ -50,7 +51,10 @@ class WebcamFragment : Fragment() {
                 error: WebResourceError?
             ) {
                 webcamStream.settings.builtInZoomControls = false
-                webcamStream.loadUrl("file:///android_asset/webcam_error.html")
+                when (Theme.isDarkMode()) {
+                    true -> { webcamStream.loadUrl("file:///android_asset/webcam_error.html") }
+                    false -> { webcamStream.loadUrl("file:///android_asset/webcam_error_light.html") }
+                }
             }
         }
 

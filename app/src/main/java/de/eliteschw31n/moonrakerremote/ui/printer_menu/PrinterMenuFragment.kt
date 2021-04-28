@@ -46,9 +46,8 @@ class PrinterMenuFragment : Fragment() {
             defaultData.put("webcamurl", "http://mainsailos.local/webcam/?action=stream")
             val profileName = generateName()
             LocalDatabase.updatePrinterData(profileName, defaultData)
-            Thread {
-                addPrinterProfile(profileName)
-            }
+            LocalDatabase.setCurrentEditPrinter(profileName)
+            findNavController().navigate(R.id.nav_printer_settings)
         }
         return root
     }
@@ -72,7 +71,6 @@ class PrinterMenuFragment : Fragment() {
         val constraintSet = ConstraintSet()
         subLayout.id = View.generateViewId()
         subLayout.layoutParams = layoutParams
-        Log.d("id", lastProfile.toString())
         MainActivity.runUiUpdate(Runnable {
             profilesLayout.addView(subLayout)
             constraintSet.clone(profilesLayout)
@@ -83,7 +81,7 @@ class PrinterMenuFragment : Fragment() {
             lastProfile = subLayout.id
         })
         val fragmentTransaction = MainActivity.supportFragmentManager().beginTransaction()
-        fragmentTransaction.add(subLayout.id, printerProfile)
+        fragmentTransaction.add(subLayout.id, printerProfile, "printer_profile_$name")
         fragmentTransaction.commit()
         while (printerProfile.view == null) {
             Thread.sleep(100)
