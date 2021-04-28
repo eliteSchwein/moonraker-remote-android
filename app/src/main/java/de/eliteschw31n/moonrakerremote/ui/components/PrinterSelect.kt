@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
+import de.eliteschw31n.moonrakerremote.tasks.WebsocketTask
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.NavTitles
 import de.eliteschw31n.moonrakerremote.utils.Theme
@@ -71,6 +72,7 @@ class PrinterSelect : Fragment()  {
             val currentClickArea: View? = currentFragment?.view?.findViewById(R.id.component_printer_select_click_area)
             LocalDatabase.updateCurrentPrinter(title.text.toString())
             NavTitles.updateTitles()
+            WebsocketTask.connect(profileData.getString("websocketurl"))
             MainActivity.runUiUpdate(Runnable {
                 currentClickArea?.isClickable = true
                 currentClickArea?.setBackgroundResource(R.color.transparent)
