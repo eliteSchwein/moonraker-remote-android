@@ -1,15 +1,13 @@
 package de.eliteschw31n.moonrakerremote.ui.components
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -90,13 +88,24 @@ class PrinterSelect : Fragment()  {
     }
 
     private fun loadPreview() {
-
         cameraPreview.loadUrl(profileData.getString("webcamurl"))
 
-        cameraPreview.settings.loadWithOverviewMode = true
-        cameraPreview.settings.useWideViewPort = true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // chromium, enable hardware acceleration
+            cameraPreview.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            // older android version, disable hardware acceleration
+            cameraPreview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+        cameraPreview.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+
+        cameraPreview.settings.javaScriptEnabled = true
+        cameraPreview.settings.cacheMode = WebSettings.LOAD_NO_CACHE
         cameraPreview.settings.builtInZoomControls = false
         cameraPreview.settings.displayZoomControls = false
+        cameraPreview.settings.loadWithOverviewMode = true
+        cameraPreview.settings.useWideViewPort = true
 
         cameraPreview.isVerticalScrollBarEnabled = false
         cameraPreview.isHorizontalScrollBarEnabled = false
@@ -106,13 +115,14 @@ class PrinterSelect : Fragment()  {
 
         cameraPreview.webViewClient = object: WebViewClient() {
             override fun onReceivedError(
-                    view: WebView?,
-                    request: WebResourceRequest?,
-                    error: WebResourceError?
+                view: WebView?,
+                errorCode: Int,
+                description: String,
+                failingURL: String
             ) {
                 when (Theme.isDarkMode()) {
-                    true -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_error.html") }
-                    false -> { cameraPreview.loadUrl("file:///android_asset/webcam_preview_error_light.html") }
+                    true -> { cameraPreview.loadUrl("file:///android_asset/webcam_error.html") }
+                    false -> { cameraPreview.loadUrl("file:///android_asset/webcam_error_light.html") }
                 }
             }
         }

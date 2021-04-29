@@ -1,10 +1,6 @@
 package de.eliteschw31n.moonrakerremote.ui.webcam
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.media.MediaPlayer
-import android.net.Uri
+import android.annotation.TargetApi
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,23 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
-import android.widget.MediaController
-import android.widget.VideoView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import de.eliteschw31n.moonrakerremote.MainActivity
+import androidx.lifecycle.ViewModelProvider
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.Theme
 import org.json.JSONObject
 
-class WebcamFragment : Fragment() {
+class WebcamFragmentBackup : Fragment() {
     private lateinit var printerData: JSONObject
     private lateinit var currentPrinter: String
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_webcam, container, false)
 
@@ -45,7 +40,6 @@ class WebcamFragment : Fragment() {
             // older android version, disable hardware acceleration
             webcamStream.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
 
         webcamStream.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
 
@@ -65,14 +59,11 @@ class WebcamFragment : Fragment() {
                 description: String,
                 failingURL: String
             ) {
+                Log.d("webcam", "error")
                 webcamStream.settings.builtInZoomControls = false
                 when (Theme.isDarkMode()) {
-                    true -> {
-                        webcamStream.loadUrl("file:///android_asset/webcam_error.html")
-                    }
-                    false -> {
-                        webcamStream.loadUrl("file:///android_asset/webcam_error_light.html")
-                    }
+                    true -> { webcamStream.loadUrl("file:///android_asset/webcam_error.html") }
+                    false -> { webcamStream.loadUrl("file:///android_asset/webcam_error_light.html") }
                 }
             }
         }
