@@ -19,7 +19,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.MoonrakerRemote.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.MoonrakerRemote.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="Theme.MoonrakerRemote.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.MoonrakerRemote.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 </resources>

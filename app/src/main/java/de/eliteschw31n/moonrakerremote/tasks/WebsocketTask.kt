@@ -73,7 +73,7 @@ class WebsocketTask {
                                 .setContentTitle("Connection Lost")
                                 .setContentText("Reason: $reason")
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .addAction(R.drawable.ic_app_logo, "Reconnect", pendingIntent)
+                                .addAction(R.drawable.ic_reconnect, "Reconnect", pendingIntent)
                         NotificationUtil.notify(notifyBuilder, 1)
                     }
 
