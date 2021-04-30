@@ -19,7 +19,10 @@ import de.eliteschw31n.moonrakerremote.MainActivity
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.Theme
+import de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegInputStream
+import de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegView
 import org.json.JSONObject
+import java.io.InputStream
 
 class WebcamFragment : Fragment() {
     private lateinit var printerData: JSONObject
@@ -46,6 +49,11 @@ class WebcamFragment : Fragment() {
             webcamStream.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
+        val webcamView: MjpegView = root.findViewById(R.id.webcam_stream)
+        webcamView.setDisplayMode(MjpegView.SIZE_BEST_FIT)
+        webcamView.showFps(true)
+        webcamView.setSource(MjpegInputStream.read(printerData.getString("webcamurl")))
+        webcamView.startPlayback()
 
         webcamStream.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
 
