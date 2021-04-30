@@ -50,8 +50,6 @@ class WebcamFragment : Fragment() {
         }
 
         val webcamView: MjpegView = root.findViewById(R.id.webcam_stream)
-        webcamView.setDisplayMode(MjpegView.SIZE_BEST_FIT)
-        webcamView.showFps(true)
         webcamView.setSource(MjpegInputStream.read(printerData.getString("webcamurl")))
         webcamView.startPlayback()
 

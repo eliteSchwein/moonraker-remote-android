@@ -64,7 +64,7 @@ class MjpegInputStream(`in`: InputStream?) : DataInputStream(BufferedInputStream
 
     companion object {
         private const val HEADER_MAX_LENGTH = 100
-        private const val FRAME_MAX_LENGTH = 40000000 + HEADER_MAX_LENGTH
+        private const val FRAME_MAX_LENGTH = 40000 + HEADER_MAX_LENGTH
         fun read(url: String?): MjpegInputStream? {
             val webcamURL = URL(url)
             val webcamConnection = webcamURL.openConnection() as HttpURLConnection
