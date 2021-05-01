@@ -38,7 +38,7 @@ class WebcamFragment : Fragment() {
 
         WebcamUtil.preloadWebcam(webcamView)
 
-        WebcamUtil.loadWebcam(false, printerData.getString("webcamurl"), webcamView)
+        WebcamUtil.loadWebcam(true, printerData.getString("webcamurl"), webcamView)
 
         return root
     }
