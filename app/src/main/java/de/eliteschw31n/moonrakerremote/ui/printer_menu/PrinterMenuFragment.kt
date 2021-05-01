@@ -24,7 +24,15 @@ class PrinterMenuFragment : Fragment() {
     private lateinit var printerProfiles: JSONObject
     private lateinit var currentPrinter: String
     private lateinit var profilesLayout: ConstraintLayout
+    private lateinit var root: View
+    private var profileNames: ArrayList<String> = ArrayList()
     private var lastProfile: Int = 0
+
+    override fun onDestroy() {
+        super.onDestroy()
+        clearPrinterProfiles()
+    }
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -32,6 +40,8 @@ class PrinterMenuFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_printer_menu, container, false)
+
+        this.root = root
 
         printerProfiles = LocalDatabase.getData().getJSONObject("printers")
         currentPrinter = LocalDatabase.getData().getString("currentPrinter")
@@ -51,8 +61,20 @@ class PrinterMenuFragment : Fragment() {
         }
         return root
     }
+    private fun clearPrinterProfiles() {
+        val fragmentManager =  MainActivity.supportFragmentManager()
+        val fragmentTransaction = MainActivity.supportFragmentManager().beginTransaction()
+        Thread {
+            profileNames.forEach {
+                fragmentManager.findFragmentByTag(it)?.let { it1 -> fragmentTransaction.remove(it1) }
+            }
+            fragmentTransaction.commit()
+            profileNames.clear()
+        }.start()
+    }
     private fun loadPrinterProfiles() {
         lastProfile = 0
+        clearPrinterProfiles()
         Thread {
             Thread.sleep(250)
             for (printer in printerProfiles.keys()) {
@@ -74,7 +96,7 @@ class PrinterMenuFragment : Fragment() {
         MainActivity.runUiUpdate(Runnable {
             profilesLayout.addView(subLayout)
             constraintSet.clone(profilesLayout)
-            if(lastProfile != 0 ){
+            if(lastProfile != 0){
                 constraintSet.connect(subLayout.id, ConstraintSet.TOP, lastProfile, ConstraintSet.BOTTOM, 64)
             }
             constraintSet.applyTo(profilesLayout)
@@ -83,6 +105,7 @@ class PrinterMenuFragment : Fragment() {
         val fragmentTransaction = MainActivity.supportFragmentManager().beginTransaction()
         fragmentTransaction.add(subLayout.id, printerProfile, "printer_profile_$name")
         fragmentTransaction.commit()
+        profileNames.add("printer_profile_$name")
         while (printerProfile.view == null) {
             Thread.sleep(100)
         }
