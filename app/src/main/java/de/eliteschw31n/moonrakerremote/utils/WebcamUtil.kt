@@ -2,10 +2,14 @@ package de.eliteschw31n.moonrakerremote.utils
 
 import android.os.Build
 import android.view.View
+import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import de.eliteschw31n.moonrakerremote.MainActivity
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
+import kotlin.random.Random
 
 class WebcamUtil {
     companion object {
@@ -51,6 +55,10 @@ class WebcamUtil {
                 webcamView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
 
+            webcamView.webChromeClient = object: WebChromeClient() {
+
+            }
+
             webcamView.webViewClient = object: WebViewClient() {
                 override fun onReceivedError(
                         view: WebView?,
@@ -67,6 +75,9 @@ class WebcamUtil {
             webcamView.setOnTouchListener { v, event ->
                 !enableZoom
             }
+        }
+        private fun generateBufferURL(): String {
+            return "something" + Random.nextInt(0, 1000)
         }
     }
 }
