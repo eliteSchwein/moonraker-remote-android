@@ -7,7 +7,8 @@ import com.chillingvan.canvasgl.glcanvas.GLPaint
 import com.chillingvan.canvasgl.glview.GLView
 
 class MjpegView : GLView {
-    private lateinit var thread: Thread
+    private lateinit var renderThread: Thread
+    private lateinit var webThread: Thread
     private var mIn: MjpegInputStream? = null
     private var mBitmap: Bitmap? = null
 
@@ -24,18 +25,24 @@ class MjpegView : GLView {
     }
 
     fun stopPlayback() {
-        thread.interrupt()
+        webThread.interrupt()
+        renderThread.interrupt()
     }
 
     fun startPlayback() {
-        thread = Thread {
+        renderThread = Thread {
             while (!Thread.interrupted()) {
-                mBitmap = mIn?.readMjpegFrame()
                 this.requestRender()
-                Thread.sleep(1000)
+                Thread.sleep(250)
             }
         }
-        thread.start()
+        renderThread.start()
+        webThread = Thread {
+            while (!Thread.interrupted()) {
+                mBitmap = mIn?.readMjpegFrame()
+            }
+        }
+        webThread.start()
     }
 
     override fun onGLDraw(canvas: ICanvasGL?) {

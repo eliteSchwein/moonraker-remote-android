@@ -5,7 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.webcam.WebcamFragment">
+    <de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegView
+        android:id="@+id/mjpeg_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <WebView
+        android:visibility="invisible"
         android:id="@+id/webcam_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

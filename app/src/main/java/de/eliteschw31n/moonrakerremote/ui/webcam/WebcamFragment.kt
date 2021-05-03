@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
-import com.longdo.mjpegviewer.MjpegView
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.WebcamUtil
+import de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegInputStream
+import de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegView
 import org.json.JSONObject
 import java.util.*
 
@@ -18,10 +19,13 @@ class WebcamFragment : Fragment() {
     private lateinit var printerData: JSONObject
     private lateinit var currentPrinter: String
     private lateinit var webcamView: WebView
+    private lateinit var mjpegView: MjpegView
 
     override fun onDestroy() {
         super.onDestroy()
         webcamView.destroy()
+        mjpegView.stopPlayback()
+        mjpegView.stop()
     }
 
     override fun onCreateView(
@@ -36,9 +40,14 @@ class WebcamFragment : Fragment() {
 
         webcamView = root.findViewById(R.id.webcam_view)
 
-        WebcamUtil.preloadWebcam(webcamView)
+        mjpegView = root.findViewById(R.id.mjpeg_view)
 
-        WebcamUtil.loadWebcam(true, printerData.getString("webcamurl"), webcamView)
+        mjpegView.setSource(MjpegInputStream.read(printerData.getString("webcamurl")))
+        mjpegView.startPlayback()
+
+        //WebcamUtil.preloadWebcam(webcamView)
+
+        //WebcamUtil.loadWebcam(true, printerData.getString("webcamurl"), webcamView)
 
         return root
     }
