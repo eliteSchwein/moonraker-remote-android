@@ -3,7 +3,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
 import com.chillingvan.canvasgl.ICanvasGL
-import com.chillingvan.canvasgl.glcanvas.GLPaint
 import com.chillingvan.canvasgl.glview.GLView
 
 class MjpegView : GLView {
@@ -33,21 +32,24 @@ class MjpegView : GLView {
         renderThread = Thread {
             while (!Thread.interrupted()) {
                 this.requestRender()
-                Thread.sleep(250)
+                //Thread.sleep(250)
             }
         }
         renderThread.start()
         webThread = Thread {
             while (!Thread.interrupted()) {
                 mBitmap = mIn?.readMjpegFrame()
+                //Thread.sleep(100)
             }
         }
         webThread.start()
     }
 
     override fun onGLDraw(canvas: ICanvasGL?) {
+        canvas?.clearBitmapCache()
+        canvas?.clearBuffer()
         mBitmap?.let {
-            canvas?.drawBitmap(it,0,0)
+            canvas?.drawBitmap(it,0,0,1080,720)
         }
     }
 }

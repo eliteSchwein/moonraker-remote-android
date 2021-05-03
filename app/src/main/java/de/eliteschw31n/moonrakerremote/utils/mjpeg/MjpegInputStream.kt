@@ -69,8 +69,8 @@ class MjpegInputStream(`in`: InputStream?) : DataInputStream(BufferedInputStream
             val webcamURL = URL(url)
             val webcamConnection = webcamURL.openConnection() as HttpURLConnection
             var stream: MjpegInputStream? = null
-            webcamConnection.connectTimeout = 2000
-            webcamConnection.readTimeout = 2000
+            webcamConnection.connectTimeout = 20000
+            webcamConnection.readTimeout = 20000
             try {
                 val webThread = Thread {
                     webcamConnection.connect()

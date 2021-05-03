@@ -1,14 +1,19 @@
 package de.eliteschw31n.moonrakerremote.ui.webcam
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
+import android.widget.MediaController
+import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import de.eliteschw31n.moonrakerremote.R
 import de.eliteschw31n.moonrakerremote.utils.LocalDatabase
 import de.eliteschw31n.moonrakerremote.utils.WebcamUtil
+import de.eliteschw31n.moonrakerremote.utils.mjpeg.Mjpeg2View
 import de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegInputStream
 import de.eliteschw31n.moonrakerremote.utils.mjpeg.MjpegView
 import org.json.JSONObject
@@ -19,13 +24,13 @@ class WebcamFragment : Fragment() {
     private lateinit var printerData: JSONObject
     private lateinit var currentPrinter: String
     private lateinit var webcamView: WebView
-    private lateinit var mjpegView: MjpegView
 
     override fun onDestroy() {
         super.onDestroy()
+        //mjpegView3.stopPlayback()
         webcamView.destroy()
-        mjpegView.stopPlayback()
-        mjpegView.stop()
+        //mjpegView.stopPlayback()
+        //mjpegView2.stopStream()
     }
 
     override fun onCreateView(
@@ -40,14 +45,9 @@ class WebcamFragment : Fragment() {
 
         webcamView = root.findViewById(R.id.webcam_view)
 
-        mjpegView = root.findViewById(R.id.mjpeg_view)
+        WebcamUtil.preloadWebcam(webcamView)
 
-        mjpegView.setSource(MjpegInputStream.read(printerData.getString("webcamurl")))
-        mjpegView.startPlayback()
-
-        //WebcamUtil.preloadWebcam(webcamView)
-
-        //WebcamUtil.loadWebcam(true, printerData.getString("webcamurl"), webcamView)
+        WebcamUtil.loadWebcam(true, printerData.getString("webcamurl"), webcamView)
 
         return root
     }
